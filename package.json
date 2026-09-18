@@ -1,0 +1,19 @@
+{
+  "name": "im2-final-project",
+  "version": "1.0.0",
+  "description": "This repository contain all the folder and project information about my project that is named (Micro Retail Business Point of Sales (Web-Based - Mobile/Desktop)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-Student727/IM2-FINAL-PROJECT.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dev-Student727/IM2-FINAL-PROJECT/issues"
+  },
+  "homepage": "https://github.com/dev-Student727/IM2-FINAL-PROJECT#readme"
+}
