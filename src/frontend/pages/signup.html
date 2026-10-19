@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="../styles/signup.css">
+    <link rel="stylesheet" href="../styles/font.css">
+    <link rel="stylesheet" href="../styles/modal.css">
+    <link rel="stylesheet" href="../styles/background.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+    <!-- Sign Up Page Content Start Here -->
+    <div class="bg-container"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="container">
+        <form action="">
+            <h1>Sign Up</h1>
+
+            <!-- Input Types -->
+            <div class="input-box">
+                <input type="text" id="user-name" placeholder="Name" required>
+            </div>
+            <div class="input-box">
+                <input type="email" id="user-email" placeholder="example@gamail.com" required>
+            </div>
+            <div class="input-box">
+                <input type="tel" id="user-phone" placeholder="ex.09091234567" required>
+            </div>
+
+            <button type="submit" class="btn" id="next-btn">Next</button>
+        </form>
+    </div>
+
+    <!-- Custom Modal -->
+    <div class="modal-overlay" id="custom-modal">
+        <div class="modal-content">
+            <p class="modal-message" id="modal-msg-text">Message here...</p>
+            <div class="modal-buttons" id="modal-btn-container">
+                <!-- Buttons will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+</body>
+</html>

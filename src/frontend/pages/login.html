@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../styles/auth.css">
+    <link rel="stylesheet" href="../styles/font.css">
+    <link rel="stylesheet" href="../styles/modal.css">
+    <link rel="stylesheet" href="../styles/background.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+    <!-- Login Page Content Start Here -->
+    <div class="bg-container"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="login-container">
+        <form action="">
+            <h1>LOGIN POS</h1>
+
+            <!-- Input Types -->
+            <div class="input-group">
+                <input type="text" id="user-id" placeholder="User ID" required>
+                <i class='bx bxs-user'></i>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password" required>
+                <i class='bx bxs-lock-alt' ></i>
+            </div>
+            
+            <div class="remember-forgot">
+                <label>
+                    <input type="checkbox" id="remember-me"> Remember Me
+                </label>
+                <a href="#" id="forgot-password">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn" id="login-btn">Login</button>
+        </form>
+    </div>
+
+    <!-- Custom Modal -->
+    <div class="modal-overlay" id="custom-modal">
+        <div class="modal-content">
+            <p class="modal-message" id="modal-msg-text">Message here...</p>
+            <div class="modal-buttons" id="modal-btn-container">
+                <!-- Buttons will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+</body>
+</html>

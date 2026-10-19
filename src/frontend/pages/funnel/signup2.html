@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Creating Account</title>
+    <link rel="stylesheet" href="../../styles/signup.css">
+    <link rel="stylesheet" href="../../styles/font.css">
+    <link rel="stylesheet" href="../../styles/modal.css">
+    <link rel="stylesheet" href="../../styles/background.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+    <!-- Sign Up Page Content Start Here -->
+    <div class="bg-container"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="card">
+        <div class="header">
+            <h1>Create Your Account</h1>
+        </div>
+        
+        <div class="signup-form">
+            <!-- USER ID INPUT -->
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="text" id="user-id" class="form-control" placeholder="e.g. pos_O1234" required>
+                </div>
+            </div>
+
+            <!-- USER ID SECURITY CHECKLIST -->
+            <div class="checklist" id="userid-checklist">
+                <div id="req-id-len" class="check-item"><span class="dot"></span>User ID At least 5 characters long</div>
+                <div id="req-id-no-space" class="check-item"><span class="dot"></span>No spaces</div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="password" id="user-password" class="form-control" placeholder="............" required style="padding-right: 40px;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal -->
+    <div class="modal-overlay" id="custom-modal">
+        <div class="modal-content">
+            <p class="modal-message" id="modal-msg-text">Message here...</p>
+            <div class="modal-buttons" id="modal-btn-container">
+                <!-- Buttons will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/auth.js"></script>
+</body>
+</html>

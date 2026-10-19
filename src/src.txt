@@ -1,0 +1,14 @@
+.title-card {
+    position: relative;
+    z-index: 10;
+    max-width: 780px;
+    width: 80%;
+    padding: 40px;
+    background-color: rgba(30, 59, 187, 0.7); /* Semi-transparent black background */
+    backdrop-filter: blur(8px); /* Blur effect for the background */
+    -webkit-backdrop-filter: blur(8px);
+    border: 2px solid rgba(17, 155, 219, 0.952); /* Optional: subtle border */
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8); /* Optional: shadow for depth */
+    text-align: center;
+}

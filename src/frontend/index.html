@@ -4,9 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Point of Sales (Beta)</title>
-    <link rel="stylesheet" href="../frontend/styles/main.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/font.css">
+    <link rel="stylesheet" href="styles/modal.css">
+    <link rel="stylesheet" href="styles/background.css">
 </head>
 <body>
-    <!-- Pos Welcome Page Content Goes Here -->
+    <!-- Pos Welcome Page Content Goes Here - Desktop Version-->
+    <div class="bg-container"></div>
+    <div class="bg-overlay"></div>
+
+    <main class="welcome-content">
+        <h2>WELCOME TO MICRO RETAIL</h2>
+        <h1>POINT OF SALES</h1>
+        <p>
+            Do you have an account? Please login or register to continue.
+        </p>
+        <button class="btn" id="login-btn">Login</button>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Micro Retail. All rights reserved.</p>
+    </footer>
+
+    <!-- Custom Modal -->
+    <div class="modal-overlay" id="custom-modal">
+        <div class="modal-content">
+            <p class="modal-message" id="modal-msg-text">Message here...</p>
+            <div class="modal-buttons" id="modal-btn-container">
+                <!-- Buttons will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bungee&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --bg-white-40: #ffffff;
+    --bg-cyan-50: #ecfeff;
+    --bg-cyan-100: #cffafe;
+    --bg-cyan-200: #a5f3fc;
+    --bg-cyan-300: #67e8f9;
+    --bg-cyan-400: #22d3ee;
+    --bg-cyan-500: #06b6d4;
+    --bg-cyan-600: #0891b2;
+    --bg-cyan-700: #0e7490;
+    --bg-cyan-800: #155e75;
+    --bg-cyan-900: #164e63;
+    --bg-cyan-950: #083344;
+
+    --bg-red-50: #FFE6E6;
+    --bg-red-100: #FFB8B8;
+    --bg-red-200: #FF8A8A;
+    --bg-red-300: #FF5C5C;
+    --bg-red-400: #FF2E2E;
+    --bg-red-500: #FF0000;
+    --bg-red-600: #D10000;
+    --bg-red-700: #A30000;
+    --bg-red-800: #750000;
+    --bg-red-900: #470000;
+    --bg-red-950: #1A0000;
+
+    --bg-blue-50: #E6E6FF;
+    --bg-blue-100: #B8B8FF;
+    --bg-blue-200: #8A8AFF;
+    --bg-blue-300: #5C5CFF;
+    --bg-blue-400: #2E2EFF;
+    --bg-blue-500: #0000FF;
+    --bg-blue-600: #0000D1;
+    --bg-blue-700: #0000A3;
+    --bg-blue-800: #000075;
+    --bg-blue-900: #000047;
+    --bg-blue-950: #00001A;
+
+    --bg-green-50: #E6FFE6;
+    --bg-green-100: #B8FFB8;
+    --bg-green-200: #8AFF8A;
+    --bg-green-300: #5CFF5C;
+    --bg-green-400: #2EFF2E;
+    --bg-green-500: #00FF00;
+    --bg-green-600: #00D100;
+    --bg-green-700: #00A300;
+    --bg-green-800: #008000;
+    --bg-green-900: #004700;
+    --bg-green-950: #001A00;
+}
+
+/*Text Root Color 1*/
+:root {
+    --text-black-50: #E6F2FF;
+    --text-black-100: #CCE5FF;
+    --text-black-200: #91CDFF;
+    --text-black-300: #20B5FF;
+    --text-black-400: #009ADB;
+    --text-black-500: #007FB5;
+    --text-black-600: #006590;
+    --text-black-700: #004C6D;
+    --text-black-800: #00344C;
+    --text-black-900: #001E2E;
+    --text-black-950: #00131F;
+}
+
+
+/* Text Root Color 2 */
+:root {
+    --text-cyan-50: #d1d1d1c0;
+    --text-cyan-100: #cffafe;
+    --text-cyan-200: #a5f3fc;
+    --text-cyan-300: #67e8f9;
+    --text-cyan-400: #22d3ee;
+    --text-cyan-500: #06b6d4;
+    --text-cyan-600: #0891b2;
+    --text-cyan-700: #0e7490;
+    --text-cyan-800: #155e75;
+    --text-cyan-900: #164e63;
+    --text-cyan-950: #083344;
+}
+
+/* Text Root Color 3 */
+:root {
+    --text-red-50: #FFE6E6;
+    --text-red-100: #FFB8B8;
+    --text-red-200: #FF8A8A;
+    --text-red-300: #FF5C5C;
+    --text-red-400: #FF2E2E;
+    --text-red-500: #FF0000;
+    --text-red-600: #D10000;
+    --text-red-700: #A30000;
+    --text-red-800: #750000;
+    --text-red-900: #470000;
+    --text-red-950: #1A0000;
+}
+
+/* Text Root Color 4 */
+:root {
+    --text-blue-50: #E6E6FF;
+    --text-blue-100: #B8B8FF;
+    --text-blue-200: #8A8AFF;
+    --text-blue-300: #5C5CFF;
+    --text-blue-400: #2E2EFF;
+    --text-blue-500: #0000FF;
+    --text-blue-600: #0000D1;
+    --text-blue-700: #0000A3;
+    --text-blue-800: #000075;
+    --text-blue-900: #000047;
+    --text-blue-950: #00001A;
+}
+
+/* Text Root Color 6 */
+:root {
+    --text-green-50: #E6FFE6;
+    --text-green-100: #B8FFB8;
+    --text-green-200: #8AFF8A;
+    --text-green-300: #5CFF5C;
+    --text-green-400: #2EFF2E;
+    --text-green-500: #00FF00;
+    --text-green-600: #00D100;
+    --text-green-700: #00A300;
+    --text-green-800: #008000;
+    --text-green-900: #004700;
+    --text-green-950: #001A00;
+}
+
+.login-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px 40px;
+    /*border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(30px);
+    background-color: rgba(13, 237, 245, 0.5);*/
+    width: 500px;
+    color: #ffffff;
+}
+
+.login-container h1 {
+    text-align: center;
+    font-size: 38px;
+    font-family: 'Poppins', sans-serif;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.login-container .input-group {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+}
+
+.input-group input {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    border: 2px solid var(--bg-white-40);
+    border-radius: 40px;
+    font-size: 16px;
+    color: var(--bg-white-40);
+    padding: 20px 45px 20px 20px;
+}
+
+.input-group input::placeholder {
+    color: var(--bg-white-40);
+}
+
+.input-group i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--bg-white-40);
+}
+
+.login-container .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    font-size: 14px;
+}
+
+.remember-forgot label input {
+    accent-color: var(--bg-white-40);
+    margin-right: 5px;
+}
+
+.remember-forgot a {
+    color: var(--bg-white-40);
+    text-decoration: none;
+}
+
+.remember-forgot a:hover {
+    text-decoration: underline;
+    color: var(--bg-cyan-400);
+}
+
+.login-container .btn {
+    width: 100%;
+    height: 50px;
+    background-color: var(--bg-blue-800);
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s, transform 0.2s;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--bg-white-40);
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 20px;
+}
+
+.login-container .btn:hover {
+    background-color: var(--bg-red-400);
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+} 
