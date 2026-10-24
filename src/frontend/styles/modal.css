@@ -133,7 +133,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(238, 236, 236, 0.6); /* Semi-transparent black overlay */
+    background-color: rgba(236, 238, 238, 0.6); /* Semi-transparent black overlay */
     backdrop-filter: blur(5px); /* Optional: blur effect for the overlay */
     display: flex;
     justify-content: center;

@@ -156,7 +156,7 @@
     text-align: center;
     font-size: 35px;
     font-family: 'Poppins', sans-serif;
-    text-shadow: 0 4px 6px rgba(0, 255, 255, 0.2);
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
     font-weight: 800;
     color: #ffffff;
 }
@@ -172,12 +172,19 @@
     width: 100%;
     height: 100%;
     background-color: #ffffff;
-    border: none;
+    border: 2px solid #94a3b8;
+    transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
     /*border: 2px solid var(--bg-cyan-500);*/
     border-radius: 12px;
     font-size: 16px;
     padding: 20px 45px 20px 20px;
+}
+
+.input-box input:focus {
+    outline: none;
+    border-color: var(--bg-cyan-300);
+    box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.35);
 }
 
 .input-box input::placeholder {
@@ -190,12 +197,12 @@
     background-color: var(--bg-cyan-500);
     border: none;
     outline: none;
-    border-radius: 40px;
+    border-radius: 12px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     transition: background-color 0.3s, transform 0.2s;
     cursor: pointer;
     font-size: 18px;
-    color: var(--bg-white-40);
+    color: #000000;
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
     margin-top: auto;
@@ -225,7 +232,18 @@
 }
 
 .form-group {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    display: block;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    color: #cbd5e1;
+    margin-bottom: 6px;
 }
 
 .input-wrapper {
@@ -236,7 +254,8 @@
     width: 100%;
     height: 100%;
     background-color: whitesmoke;
-    border: 2px solid #334155;
+    border: 2px solid #94a3b8;
+    transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
     /*border: 2px solid var(--bg-cyan-500);*/
     border-radius: 12px;
@@ -251,12 +270,254 @@
 }
 
 .form-control:focus {
+    outline: none;
     border-color: var(--bg-cyan-300);
+    box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.35);
 }
 
 .form-control:disabled {
-    background: rgba(3, 7, 18, 0.3);
+    background: whitesmoke;
     border-color: var(--bg-blue-950);
     color: #64748b;
     cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.toggle-btn:hover:not(:disabled) {
+    color: var(--bg-cyan-500);
+}
+
+.checklist {
+    background: whitesmoke;
+    border: 2px solid #94a3b8;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    font-size: 16px;
+    color: #94a3b8;
+}
+
+.checklist p.title {
+    font-weight: 600;
+    color: darkslategray;
+    text-align: left;
+    margin-bottom: 6px;
+}
+
+.check-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #475569;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.check-item.valid {
+    color: var(--bg-green-700);
+}
+
+.check-item.valid .dot {
+    background-color: #34d399;
+    box-shadow: 0 0 8px var(--bg-green-700);
+}
+
+.error-msg {
+    font-size: 0.75rem;
+    color: var(--bg-red-200);
+    margin-top: 4px;
+    display: none;
+    text-align: left;
+}
+
+.error-msg.visible {
+    display: block;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: gray;
+    color: #000000;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: 12px;
+    cursor: not-allowed;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+}
+
+.submit-btn.active {
+    background-color: var(--bg-cyan-400);
+    color: #000000;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.submit-btn.active:hover {
+    background-color: var(--bg-red-400);
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.back-btn {
+    background-color: var(--bg-cyan-400);
+    color: #000000;
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    padding: 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-top: 2px;
+}
+
+.back-btn:hover {
+    background-color: var(--bg-red-400);
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.form-action {
+    position: absolute;
+    right: 40px;
+    bottom: 30px;
+    left: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-action .submit-btn,
+.form-action .back-btn {
+    margin: 0;
+}
+
+/* Modal Styling */
+.modal.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(238, 236, 236, 0.6); /* Semi-transparent black overlay */
+    backdrop-filter: blur(5px); /* Optional: blur effect for the overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other content */
+    opacity: 1;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-fields {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.modal-fields[hidden] {
+    display: none;
+}
+
+.modal-fields label {
+    color: #334155;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.modal-fields input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #94a3b8;
+    border-radius: 8px;
+    font: inherit;
+}
+
+.modal-fields input:focus {
+    outline: none;
+    border-color: var(--bg-cyan-400);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+}
+
+.modal-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    color: #334155;
+}
+
+.modal-spinner {
+    width: 22px;
+    height: 22px;
+    border: 3px solid#cbd5e1;
+    border-top-color: var(--bg-cyan-600);
+    border-radius: 50%;
+    animation: modal-spin 0.8s linear infinite;
+}
+
+.modal-success-check {
+    color: #16a34a;
+    font-size: 2.5rem;
+    animation: modal-check-pop 0.35s ease-out;
+}
+
+
+@keyframes modal-spin {
+    to {transform: rotate(360deg);}
+}
+
+@keyframes modal-check-pop {
+    from {opacity: 0; transform: scale(0.5);}
+    to {opacity: 1; transform: scale(1);}
+}
+
+#custom-modal.modal-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#custom-modal .modal-content {
+    transform: scale(1);
+}
+
+#custom-modal .modal-content::before {
+    content: "Do you want to save these POS login credentials?";
+    display: block;
+    margin-bottom: 25px;
+    color: #000;
+    font-size: 20px;
+    line-height: 1.5;
 }

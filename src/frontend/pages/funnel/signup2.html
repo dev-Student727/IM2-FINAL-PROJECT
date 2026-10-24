@@ -21,40 +21,77 @@
             <h1>Create Your Account</h1>
         </div>
         
-        <div class="signup-form">
+        <form id="signup-form">
             <!-- USER ID INPUT -->
             <div class="form-group">
-                <div class="input-wrapper">
-                    <input type="text" id="user-id" class="form-control" placeholder="e.g. pos_O1234" required>
-                </div>
+                <label for="user-id">User ID / Username:</label>
+                <input type="text" id="user-id" class="form-control" placeholder="e.g. pos_O1234" required>
             </div>
 
             <!-- USER ID SECURITY CHECKLIST -->
             <div class="checklist" id="userid-checklist">
+                <p class="title">User ID /Username Checklist:</p>
                 <div id="req-id-len" class="check-item"><span class="dot"></span>User ID At least 5 characters long</div>
                 <div id="req-id-no-space" class="check-item"><span class="dot"></span>No spaces</div>
             </div>
 
             <!-- Password Input -->
             <div class="form-group">
+                <label for="password">Password:</label>
                 <div class="input-wrapper">
-                    <input type="password" id="user-password" class="form-control" placeholder="............" required style="padding-right: 40px;">
-
+                    <input type="password" id="password" class="form-control" required style="padding-right: 40px;">
+                    <button type="button" id="toggle-password" class="toggle-btn">
+                        <i class='bx bx-show' id="eye-icon-pwd"></i>
+                    </button>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Custom Modal -->
-    <div class="modal-overlay" id="custom-modal">
-        <div class="modal-content">
-            <p class="modal-message" id="modal-msg-text">Message here...</p>
-            <div class="modal-buttons" id="modal-btn-container">
-                <!-- Buttons will be dynamically added here -->
+            <!-- Password Checklist Validation-->
+            <div class="checklist" id="password-checklist">
+                <p class="title">Password Checklist:</p>
+                <div id="req-pwd-len" class="check-item"><span class="dot"></span>At least 8 characters long</div>
+                <div id="req-pwd-upper" class="check-item"><span class="dot"></span>At least one uppercase & lowercase letter (A-Z)</div>
+                <div id="req-pwd-num" class="check-item"><span class="dot"></span>At least one number (0 - 9)</div>
+                <div id="req-pwd-special" class="check-item"><span class="dot"></span>At least one special character (e.g., #!&%_-)</div>
             </div>
-        </div>
+
+            <!--Password Confirmation Input-->
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password:</label>
+                <div class="input-wrapper">
+                    <input type="password" id="confirm-password" class="form-control" placeholder="Complete the requirement first..." disabled required style="padding-right: 40px;">
+                    <button type="button" id="toggle-confirm" class="toggle-btn">
+                        <i class='bx bx-show' id="eye-icon-conf"></i>
+                    </button>
+                </div>
+                <p id="match-error" class="error-msg"> Password do not match</p>
+            </div>
+
+            <!-- Form Button-->
+            <div class="form-action">
+                <button type="submit" id="submit-btn" class="submit-btn" disabled>Create Account</button>
+                <button type="button" class="back-btn" onclick="window.location.href='../../index.html'">Back to Welcome Page</button>
+            </div>
+        </form>
     </div>
 
-    <script src="../../js/auth.js"></script>
+    <div class="modal-overlay" id="custom-modal" aria-hidden="true">
+        <section class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-msg-text">
+            <p class="modal-message" id="modal-msg-text"></p>
+
+            <div class="modal-fields" id="modal-fields" hidden>
+                <label for="modal-username">User ID/Username</label>
+                <input id="modal-username" type="text" autocomplete="username">
+                
+                <label for="modal-password">Password</label>
+                <input id="modal-password" type="password" autocomplete="current-password">
+            </div>
+
+            <div class="modal-status" id="modal-status" aria-live="polite"></div>
+            <div class="modal-buttons" id="modal-buttons"></div>
+        </section>
+    </div>
+
+    <script src="/src/frontend/js/auth.js"></script>
 </body>
 </html>

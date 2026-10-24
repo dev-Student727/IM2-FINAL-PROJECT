@@ -173,6 +173,6 @@ body, html {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.35); /* Semi-transparent black overlay */
+    background-color: rgba(0, 0, 163, 0.50); /* Semi-transparent black overlay */
     z-index: -1;
 }
