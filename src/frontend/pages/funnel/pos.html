@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../styles/font.css">
+    <link rel="stylesheet" href="../../styles/main-system.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>MRB-POS | Point of Sales</title>
+</head>
+<body>
+    <!-- Point of Sales Stracture-->
+    <div class="pos-wrapper">
+        <aside class="sidebar">
+            <a href="#" class="brand">
+                <span class="brand-mark">M</span>
+                <span class="brand-copy">
+                    <strong>MRB-POS</strong>
+                    <small>POS &amp; Inventory</small>
+                </span>
+            </a>
+
+            <nav class="sidebar-nav" aria-label="Main menu">
+                <!-- Dashboard -->
+                <a href="../dashboard.html" class="nav-item">
+                    <i class="bx bx-grid-alt" aria-hidden="true"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <!-- Point-of-sales-->
+                <a href="#pos" class="nav-item active">
+                    <i class="bx bx-cart" aria-hidden="true"></i>
+                    <span>Point of Sales</span>
+                </a>
+
+                <!-- Products -->
+                <a href="../funnel/product.html" class="nav-item">
+                    <i class="bx bx-package" aria-hidden="true"></i>
+                    <span>Product</span>
+                </a>
+
+                <!-- Debts -->
+                <a href="#debts" class="nav-item">
+                    <i class="bx bx-credit-card" aria-hidden="true"></i>
+                    <span>Debts</span>
+                </a>
+
+                <!-- New Sales -->
+                <a href="#sales" class="nav-item">
+                    <i class="bx bx-plus-circle" aria-hidden="true"></i>
+                    <span>New Sales</span>
+                </a>
+
+                <!-- History -->
+                <a href="#history" class="nav-item">
+                    <i class="bx bx-history" aria-hidden="true"></i>
+                    <span>History</span>
+                </a>
+
+                <!-- Pos-Setting -->
+                <a href="#settings" class="nav-item">
+                    <i class="bx bx-cog" aria-hidden="true"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main POS Dashboard -->
+        <div class="main-dashboard">
+            <header class="top-navbar">
+                <h1>Point of Sales</h1>
+                <a class="new-sale-btn" href="../funnel/sales.html">
+                    <i class="bx bx-cart" aria-hidden="true"></i>
+                    <span>New Sales</span>
+                </a>
+            </header>
+
+            <main class="pos-content">
+                <section class="product-catalog" aria-label="products">
+                    <div class="product-toolbar">
+                        <input id="product-search" class="product-search" type="search" placeholder="Search by name or its SKU..">
+
+                        <select id="category-filter" class="category-filter">
+                            <option value="all">All Categories</option>
+                            <option value="dairy">Dairy</option>
+                            <option value="noodles">Noodles</option>
+                            <option value="snacks">Snacks</option>
+                            <option value="beverages">Beverages</option>
+                            <option value="noodles">Households</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </div>
+
+                    <div class="product-grid">
+                        <button class="product-card" type="button" id="product-bear-brand">
+                            <span class="product-category">Dairy</span>
+                            <strong class="product-name">Bear Brand Powdered Milk (swak)</strong>
+                            <span class="product-details">
+                                <span class="product-price">₱16.00</span>
+                                <span class="stock-badge">20 left</span>
+                            </span>
+                        </button>
+
+                        <button class="product-card" type="button" id="product-lucky-me">
+                            <span class="product-category">Noodles</span>
+                            <strong class="product-name">Lucky Me Pancit Canton</strong>
+                            <span class="product-details">
+                                <span class="product-price">₱18.00</span>
+                                <span class="stock-badge">20 left</span>
+                            </span>
+                        </button>
+
+                        <button class="product-card" type="button" id="product-skyflakes">
+                            <span class="product-category">Snacks</span>
+                            <strong class="product-name">Skyflakes Crackers</strong>
+                            <span class="product-details">
+                                <span class="product-price">₱10.00</span>
+                                <span class="stock-badge">10 left</span>
+                            </span>
+                        </button>
+
+                        <button class="product-card" type="button" id="product-coca-cola">
+                            <span class="product-category">Beverages</span>
+                            <strong class="product-name">Coca-Cola 16oz</strong>
+                            <span class="product-details">
+                                <span class="product-price">₱12.00</span>
+                                <span class="stock-badge">12 left</span>
+                            </span>
+                        </button>
+                    </div>
+                </section>
+
+                <aside class="order-panel" aria-label="Current order">
+                    <div class="order-heading">
+                        <h2><i class="bx bx-cart" aria-hidden="true"></i>Current Orders</h2>
+                        <span class="order-count" id="order-count">0</span>
+                    </div>
+
+                    <p class="order-status" id="order-status" role="status" aria-live="polite" hidden></p>
+                    <div class="order-empty" id="order-empty">Tap products to add them.</div>
+
+                    <div class="order-totals">
+                        <div class="total-row">
+                            <span id="order-subtotal">Subtotal</span>
+                            <span>₱0.00</span>
+                        </div>
+
+                        <div class="total-row grand-total">
+                            <span>Total</span>
+                            <span id="order-total">₱0.00</span>
+                        </div>
+                        <button class="checkout-button" type="button">
+                            <i class="bx bx-receipt" aria-hidden="true"></i>
+                            Checkout
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- Checkout dialog changes its fields based on the selected payment type. -->
+                <dialog class="checkout-dialog" id="checkout-dialog" aria-labelledby="checkout-title">
+                    <form id="checkout-form" novalidate>
+                        <div class="checkout-dialog-header">
+                            <div>
+                                <h2 id="checkout-title">Checkout</h2>
+                                <p>Total due: <strong id="checkout-total">₱0.00</strong></p>
+                            </div>
+                            <button class="checkout-close" id="checkout-close" type="button" aria-label="Close checkout">
+                                <i class="bx bx-x" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        <fieldset class="checkout-payment-type">
+                            <legend>Payment type</legend>
+                            <div class="payment-type-options">
+                                <button type="button" class="payment-type-button is-active" data-payment-type="full" aria-pressed="true">Full</button>
+                                <button type="button" class="payment-type-button" data-payment-type="utang" aria-pressed="false">Utang</button>
+                                <button type="button" class="payment-type-button" data-payment-type="partial" aria-pressed="false">Partial</button>
+                            </div>
+                        </fieldset>
+
+                        <div class="checkout-fields" data-checkout-section="customer" hidden>
+                            <label class="checkout-field">
+                                <span>Customer name <strong>*</strong></span>
+                                <input id="checkout-customer-name" name="customerName" type="text" autocomplete="name" placeholder="Juan Dela Cruz">
+                            </label>
+                            <label class="checkout-field">
+                                <span>Contact (optional)</span>
+                                <input id="checkout-customer-contact" name="customerContact" type="tel" autocomplete="tel" placeholder="0917...">
+                            </label>
+                        </div>
+
+                        <label class="checkout-field" data-checkout-section="method">
+                            <span>Payment method</span>
+                            <select id="checkout-payment-method" name="paymentMethod">
+                                <option value="cash">Cash</option>
+                                <option value="gcash">GCash</option>
+                            </select>
+                        </label>
+
+                        <label class="checkout-field" data-checkout-section="cash">
+                            <span>Cash received</span>
+                            <input id="checkout-cash-received" name="cashReceived" type="number" min="0" step="0.01" inputmode="decimal" value="0.00" placeholder="0.00">
+                        </label>
+                        <p class="checkout-calculation" data-checkout-section="change" hidden>
+                            Change: <strong id="checkout-change">₱0.00</strong>
+                        </p>
+
+                        <p class="checkout-notice" data-checkout-section="utang" hidden>
+                            Entire amount <strong id="checkout-debt-amount">₱0.00</strong> will be due from this customer.
+                        </p>
+
+                        <label class="checkout-field" data-checkout-section="partial" hidden>
+                            <span>Down payment</span>
+                            <input id="checkout-down-payment" name="downPayment" type="number" min="0" step="0.01" inputmode="decimal" value="0.00" placeholder="0.00">
+                        </label>
+                        <p class="checkout-calculation" data-checkout-section="balance" hidden>
+                            Remaining balance: <strong id="checkout-balance">₱0.00</strong>
+                        </p>
+
+                        <p class="checkout-error" id="checkout-error" role="alert" hidden></p>
+
+                        <div class="checkout-actions">
+                            <button class="checkout-cancel" id="checkout-cancel" type="button">Cancel</button>
+                            <button class="checkout-complete" type="submit">Complete Checkout</button>
+                        </div>
+                    </form>
+                </dialog>
+
+                <!-- Receipt opens after a valid sale and supports printing or downloading. -->
+                <dialog class="receipt-dialog" id="receipt-dialog" aria-labelledby="receipt-title">
+                    <div class="receipt-dialog-header">
+                        <h2 id="receipt-title"><span id="receipt-store-title">MRB-POS</span> Receipt <span id="receipt-number">R-1001</span></h2>
+                        <button class="checkout-close" id="receipt-close-icon" type="button" aria-label="Close receipt">
+                            <i class="bx bx-x" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <section class="receipt-paper" id="receipt-paper" aria-label="Sale receipt">
+                        <header class="receipt-paper-header">
+                            <h3 id="receipt-store-name">MRB-POS</h3>
+                            <p id="receipt-date"></p>
+                            <p id="receipt-reference"></p>
+                        </header>
+                        <div class="receipt-lines" id="receipt-lines"></div>
+                        <dl class="receipt-totals">
+                            <div><dt>Total</dt><dd id="receipt-total">₱0.00</dd></div>
+                            <div><dt id="receipt-paid-label">Paid (full)</dt><dd id="receipt-paid">₱0.00</dd></div>
+                            <div><dt>Balance</dt><dd id="receipt-balance">₱0.00</dd></div>
+                            <div id="receipt-change-row" hidden><dt>Change</dt><dd id="receipt-change">₱0.00</dd></div>
+                        </dl>
+                        <p class="receipt-thanks">Thank you for your purchase!</p>
+                    </section>
+
+                    <div class="receipt-actions">
+                        <button class="checkout-cancel" id="receipt-close" type="button">Close</button>
+                        <button class="checkout-cancel" id="receipt-download" type="button">
+                            <i class="bx bx-download" aria-hidden="true"></i>
+                            Download PDF
+                        </button>
+                        <button class="checkout-complete" id="receipt-print" type="button">
+                            <i class="bx bx-printer" aria-hidden="true"></i>
+                            Print
+                        </button>
+                    </div>
+                </dialog>
+            </main>
+        </div>
+    </div>
+
+    <script src="../../js/main-system.js"></script>
+</body>
+</html>

@@ -3,16 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Point of Sales (Beta)</title>
-    <link rel="stylesheet" href="../styles/main.css">
-    <link rel="stylesheet" href="../styles/dashboard.css">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../styles/font.css">
+    <link rel="stylesheet" href="../styles/main-system.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-    <main class="welcome-content">
-        <h1>LOGIN POS</h1>
-        <p id="signed-in-user"></p>
-        <button class="btn" id="logout-btn" type="button">Log out</button>
-    </main>
-    <script src="../js/dashboard.js"></script>
+    <!-- Dashboard Structure -->
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <a href="#" class="brand"> <!-- Link Menu Dashboard-->
+                <span class="brand-mark">M</span>
+                <span class="brand-copy">
+                    <strong>MRB-POS</strong>
+                    <small>POS &amp; Inventory</small>
+                </span>
+            </a>
+
+            <nav class="sidebar-nav" aria-label="Main menu">
+                <!-- Dashboard -->
+                <a href="#dashboard" class="nav-item active">
+                    <i class="bx bx-grid-alt" aria-hidden="true"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <!-- Point-of-sales-->
+                <a href="../pages/funnel/pos.html" class="nav-item">
+                    <i class="bx bx-cart" aria-hidden="true"></i>
+                    <span>Point of Sales</span>
+                </a>
+
+                <!-- Products -->
+                <a href="../pages/funnel/product.html" class="nav-item">
+                    <i class="bx bx-package" aria-hidden="true"></i>
+                    <span>Product</span>
+                </a>
+
+                <!-- Debts -->
+                <a href="../pages/funnel/debts.html" class="nav-item">
+                    <i class="bx bx-credit-card" aria-hidden="true"></i>
+                    <span>Debts</span>
+                </a>
+
+                <!-- New Sales -->
+                <a href="#sales" class="nav-item">
+                    <i class="bx bx-plus-circle" aria-hidden="true"></i>
+                    <span>New Sales</span>
+                </a>
+
+                <!-- History -->
+                <a href="#history" class="nav-item">
+                    <i class="bx bx-history" aria-hidden="true"></i>
+                    <span>History</span>
+                </a>
+
+                <!-- Pos-Setting -->
+                <a href="#settings" class="nav-item">
+                    <i class="bx bx-cog" aria-hidden="true"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Dashboard -->
+        <div class="main-dashboard">
+            <header class="top-navbar">
+                <h1>Dashboard</h1>
+                <a class="new-sale-btn" href="../pages/funnel/sales.html">
+                    <i class="bx bx-cart" aria-hidden="true"></i>
+                    <span>New Sales</span>
+                </a>
+            </header>
+
+            <!-- Contents of the Dashboard-->
+            <main class="dashboard-content" id="dashboard">
+                <section class="summary-grid" aria-label="Today's summary">
+                    <!-- Sales Today Card -->
+                    <article class="summary-card">
+                        <div>
+                            <p>Sales Today</p>
+                            <strong>₱0.00</strong>
+                        </div>
+                        <span class="summary-icon sales-icon">
+                            <i class="bx bx-trending-up" aria-hidden="true"></i>
+                        </span>
+                    </article>
+
+                    <!-- Transaction Today Card -->
+                    <article class="summary-card">
+                        <div>
+                            <p>Transactions Today</p>
+                            <strong>₱0.00</strong>
+                        </div>
+                        <span class="summary-icon transaction-icon">
+                            <i class="bx bx-receipt" aria-hidden="true"></i>
+                        </span>
+                    </article>
+
+                    <!-- Outstanding Debts Card -->
+                    <article class="summary-card">
+                        <div>
+                            <p>Outstanding Debts</p>
+                            <strong>₱0.00</strong>
+                        </div>
+                        <span class="summary-icon debt-icon">
+                            <i class="bx bx-credit-card" aria-hidden="true"></i>
+                        </span>
+                    </article>
+
+                    <!-- Low Stock Item Card -->
+                    <article class="summary-card">
+                        <div>
+                            <p>Low Stock Items</p>
+                            <strong>0</strong>
+                        </div>
+                        <span class="summary-icon stock-icon">
+                            <i class="bx bx-error" aria-hidden="true"></i>
+                        </span>
+                    </article>
+                </section>
+
+                <section class="dashboard-panels">
+                    <article class="panel">
+                        <div class="panel-heading">
+                            <h2>Recent Transactions</h2>
+                            <span class="panel-badge">0 Total</span>
+                        </div>
+                        <p class="empty-message">No transactions yet.</p>
+                    </article>
+
+                    <article class="panel">
+                        <div class="panel-heading">
+                            <h2>Low stock alerts</h2>
+                            <span class="panel-badge">0 items</span>
+                        </div>
+                        <p class="empty-message">All Products are well stocked</p>
+                    </article>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="../js/main-system.js"></script>
 </body>
 </html>

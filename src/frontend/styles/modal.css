@@ -133,7 +133,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(236, 238, 238, 0.6); /* Semi-transparent black overlay */
+    background-color: rgba(8, 51, 68, 0.55);; /* Semi-transparent black overlay */
     backdrop-filter: blur(5px); /* Optional: blur effect for the overlay */
     display: flex;
     justify-content: center;
@@ -154,8 +154,9 @@
     /*backdrop-filter: blur(10px); Blur effect for the modal content
     -webkit-backdrop-filter: blur(10px); */
     padding: 30px;
-    border-radius: 5px;
-    max-width: 500px;
+    border: 1px solid rgba(6, 182, 212, 0.45);
+    border-radius: 16px;
+    max-width: 440px;
     width: 90%;
     text-align: center;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); /* Optional: shadow for depth */

@@ -423,22 +423,6 @@
 }
 
 /* Modal Styling */
-.modal.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(238, 236, 236, 0.6); /* Semi-transparent black overlay */
-    backdrop-filter: blur(5px); /* Optional: blur effect for the overlay */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure it appears above other content */
-    opacity: 1;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
 
 .modal-fields {
     display: grid;
@@ -482,7 +466,7 @@
 .modal-spinner {
     width: 22px;
     height: 22px;
-    border: 3px solid#cbd5e1;
+    border: 3px solid #cbd5e1;
     border-top-color: var(--bg-cyan-600);
     border-radius: 50%;
     animation: modal-spin 0.8s linear infinite;
@@ -505,19 +489,31 @@
 }
 
 #custom-modal.modal-overlay {
-    opacity: 1;
-    pointer-events: auto;
+    background-color: rgba(8, 51, 68, 0.55);
 }
 
 #custom-modal .modal-content {
-    transform: scale(1);
+    max-width: 440px;
+    padding: 28px;
+    border: 1px solid rgba(6, 182, 212, 0.45);
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
 
-#custom-modal .modal-content::before {
-    content: "Do you want to save these POS login credentials?";
-    display: block;
-    margin-bottom: 25px;
-    color: #000;
-    font-size: 20px;
-    line-height: 1.5;
+#custom-modal .modal-message {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+#custom-modal .modal-buttons {
+    margin-top: 20px;
+}
+
+#custom-modal .modal-btn {
+    min-width: 100px;
+    border: 1px solid rgba(8, 145, 178, 0.3);
+    border-radius: 10px;
 }
