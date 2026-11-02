@@ -49,8 +49,12 @@ app = Flask(__name__)
 app.config.update(
     SECRET_KEY=load_secret_key(),
     SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE="Lax",
-    SESSION_COOKIE_SECURE=False,
+    SESSION_COOKIE_SAMESITE=os.getenv(
+        "SESSION_COOKIE_SAMESITE", "None" if os.getenv("VERCEL") else "Lax"
+    ),
+    SESSION_COOKIE_SECURE=os.getenv(
+        "SESSION_COOKIE_SECURE", "true" if os.getenv("VERCEL") else "false"
+    ).lower() in {"1", "true", "yes"},
     PERMANENT_SESSION_LIFETIME=timedelta(days=30),
 )
 CENT = Decimal("0.01")
@@ -59,6 +63,13 @@ CENT = Decimal("0.01")
 def is_allowed_local_origin(origin):
     if not origin:
         return False
+    configured_origins = {
+        value.strip().rstrip("/")
+        for value in os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
+        if value.strip()
+    }
+    if origin.rstrip("/") in configured_origins:
+        return True
     try:
         parsed = urlsplit(origin)
         return (
@@ -218,6 +229,15 @@ def health_check():
     return jsonify({"status": "ok", "database_configured": bool(
         os.getenv("DB_USER") and os.getenv("DB_NAME")
     )})
+
+
+@app.get("/")
+def api_home():
+    return jsonify({
+        "service": "MRB-POS API",
+        "status": "ok",
+        "health": "/api/health",
+    })
 
 
 @app.get("/api/auth/account-exists")

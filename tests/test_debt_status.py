@@ -1,8 +1,9 @@
 import unittest
 from decimal import Decimal
+import os
 from unittest.mock import patch
 
-from src.backend.app import debt_status, load_secret_key
+from src.backend.app import app, debt_status, load_secret_key
 
 
 class DebtStatusTests(unittest.TestCase):
@@ -22,6 +23,20 @@ class DebtStatusTests(unittest.TestCase):
         with patch.dict("os.environ", {"VERCEL": "1"}, clear=True):
             with self.assertRaisesRegex(RuntimeError, "FLASK_SECRET_KEY must be set"):
                 load_secret_key()
+
+    def test_api_root_has_service_status(self):
+        response = app.test_client().get("/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json()["health"], "/api/health")
+
+    def test_configured_frontend_origin_receives_cors_headers(self):
+        with patch.dict(os.environ, {"CORS_ALLOWED_ORIGINS": "https://pos.example.com"}):
+            response = app.test_client().get(
+                "/api/health",
+                headers={"Origin": "https://pos.example.com"},
+            )
+        self.assertEqual(response.headers["Access-Control-Allow-Origin"], "https://pos.example.com")
+        self.assertEqual(response.headers["Access-Control-Allow-Credentials"], "true")
 
 
 if __name__ == "__main__":

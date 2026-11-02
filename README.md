@@ -56,17 +56,28 @@ requests also require the migration and a reachable XAMPP database.
 
 ## Deploying the Flask backend to Vercel
 
-The backend must not try to create `.flask_secret_key` on Vercel because
-serverless function files are read-only. Add a persistent `FLASK_SECRET_KEY`
-environment variable in the Vercel project's Settings → Environment Variables,
-then redeploy. Generate a value locally with
-`py -c "import secrets; print(secrets.token_urlsafe(48))"` and paste it into
-Vercel; do not commit it to GitHub or expose it in frontend variables.
+1. In Vercel Project Settings → General, set **Root Directory** to
+   `src/backend`. This folder contains `app.py` (the Flask instance is named
+   `app`) and `requirements.txt`; Vercel detects the Flask application.
+2. In Project Settings → Environment Variables, configure:
+   - `FLASK_SECRET_KEY`: a persistent random secret. Generate one locally with
+     `py -c "import secrets; print(secrets.token_urlsafe(48))"`. Keep it private
+     and unchanged between deployments.
+   - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`: credentials
+     and host for a hosted MySQL-compatible database.
+   - `CORS_ALLOWED_ORIGINS`: your deployed frontend origin, such as
+     `https://your-frontend.vercel.app` (no path or trailing slash). For more
+     than one origin, separate them with commas.
+3. Use a managed database reachable from Vercel. XAMPP at `127.0.0.1` is on
+   your computer and cannot be reached by a deployed function. Back up the
+   hosted database and apply `src/database/pos_feature_migration.sql` to it.
+4. Redeploy after setting the variables. Open `/` for the API service response
+   or `/api/health` for the health check. These routes confirm the function
+   runs; database-backed APIs also require valid database settings and schema.
 
-The database must also be reachable from Vercel. Local XAMPP at `127.0.0.1`
-cannot be reached by a deployed function. Configure `DB_HOST`, `DB_PORT`,
-`DB_USER`, `DB_PASSWORD`, and `DB_NAME` as Vercel environment variables for a
-hosted MySQL-compatible database, and apply the SQL migration to that database.
+Vercel enables secure cross-site session cookies by default. Keep the frontend
+and backend on HTTPS, and do not put database credentials or `FLASK_SECRET_KEY`
+in frontend variables or GitHub.
 
 ## Run the frontend
 
