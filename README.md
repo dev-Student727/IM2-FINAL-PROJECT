@@ -54,6 +54,20 @@ The API listens on `http://127.0.0.1:5000`. Check
 `http://127.0.0.1:5000/api/health` for the process status. Database-backed
 requests also require the migration and a reachable XAMPP database.
 
+## Deploying the Flask backend to Vercel
+
+The backend must not try to create `.flask_secret_key` on Vercel because
+serverless function files are read-only. Add a persistent `FLASK_SECRET_KEY`
+environment variable in the Vercel project's Settings → Environment Variables,
+then redeploy. Generate a value locally with
+`py -c "import secrets; print(secrets.token_urlsafe(48))"` and paste it into
+Vercel; do not commit it to GitHub or expose it in frontend variables.
+
+The database must also be reachable from Vercel. Local XAMPP at `127.0.0.1`
+cannot be reached by a deployed function. Configure `DB_HOST`, `DB_PORT`,
+`DB_USER`, `DB_PASSWORD`, and `DB_NAME` as Vercel environment variables for a
+hosted MySQL-compatible database, and apply the SQL migration to that database.
+
 ## Run the frontend
 
 Open the frontend with VS Code Live Server using port `5500` and visit

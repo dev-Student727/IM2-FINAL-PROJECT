@@ -15,6 +15,11 @@ def load_secret_key():
     if configured_key:
         return configured_key
 
+    if os.getenv("VERCEL"):
+        raise RuntimeError(
+            "FLASK_SECRET_KEY must be set in the Vercel project environment variables."
+        )
+
     key_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".flask_secret_key")
     try:
         with open(key_path, "r", encoding="utf-8") as key_file:
