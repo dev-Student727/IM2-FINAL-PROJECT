@@ -1,81 +1,107 @@
 # MRB-POS
 
-MRB-POS is a web-based point-of-sale and inventory interface for a micro retail
-business. It is designed to help a cashier prepare a customer order, calculate
-the amount due, record a payment type, and provide a receipt. The frontend is
-intended for desktop and mobile screens.
+MRB-POS is a browser-based point-of-sale and inventory application. The Flask
+API uses the existing XAMPP MariaDB/MySQL database as the source of truth for
+products, stock, sales, customer debts, payment history, reports, and settings.
 
-## What the system is for
+## Database setup
 
-The system's intended use is to support everyday small-store sales workflows:
+1. Start Apache and MySQL in the XAMPP Control Panel.
+2. Open phpMyAdmin at `http://127.0.0.1/phpmyadmin/` and select the existing
+   `pos` database.
+3. Back up the database before changing its structure or data: open the
+   database's **Export** tab, choose **Quick** and **SQL**, then click **Export**
+   and save the downloaded `.sql` file somewhere safe.
+4. Open the **Import** tab for the `pos` database. Choose
+   [`src/database/pos_feature_migration.sql`](src/database/pos_feature_migration.sql)
+   from this project, keep the format set to **SQL**, and click **Import** or
+   **Go**. The script starts with `USE \`pos\`;`, so confirm the selected database
+   is the intended one before running it.
+5. Wait for phpMyAdmin's success message. On the database's **Structure** tab,
+   verify the new columns and support tables are present. The migration is
+   intended for MariaDB (the XAMPP version tested here is 10.4.32); it adds
+   feature columns/tables and changes amount columns to store cents. It does
+   not drop tables, but it does update existing payment-status data.
+6. If phpMyAdmin displays an error, do not guess at edits or switch databases.
+   Copy the complete error and the SQL statement shown as failing so the
+   migration can be diagnosed safely.
 
-- View products and their displayed prices and stock.
-- Add products to an order and adjust or remove quantities.
-- Calculate the order subtotal and total.
-- Complete a full payment, record a sale as customer debt (Utang), or enter a
-  partial down payment.
-- Show change or remaining balance where applicable.
-- Display, print, or download a custom PDF receipt after checkout.
+## Run the backend
 
-## Current functionality
-
-The Point of Sales page at `src/frontend/pages/funnel/pos.html` is the current
-interactive workflow:
-
-- Product cards are currently hard-coded in the HTML.
-- Selecting a card adds that product to the in-memory order. Quantity controls
-  enforce the displayed stock limit.
-- Checkout validates required customer and payment values and calculates totals,
-  change, and remaining balance.
-- Completing checkout clears the current order, updates the displayed stock for
-  the current page session, and opens a receipt.
-- The receipt uses the MRB-POS name from the page branding. It can be closed,
-  printed, or downloaded as a PDF.
-
-Other pages include the dashboard, product, sales, debts, login, and signup
-interfaces. Some of these are currently presentation or in-progress screens;
-their presence does not mean the corresponding data workflows are connected.
-
-## Development status and limitations
-
-Frontend-to-backend and backend-to-database integrations are disconnected while
-the backend is being revised.
-
-- Product data and stock are static/demo values. Cart and stock changes exist
-  only in page memory and reset when the page is reloaded.
-- Completed sales, customer debts, and receipts are not saved to a database.
-  The generated PDF can be downloaded, but the application does not retain
-  sales history.
-- Login and signup are UI-only and do not authenticate users or save accounts.
-- Product search and category controls are displayed but are not currently
-  connected to filtering behavior.
-- `src/backend/app.py` is an empty Flask shell with no API routes or database
-  connection.
-- The existing XAMPP database, schema, and records have not been changed.
-- The npm `test` script is a placeholder and does not run an application test
-  suite.
-
-Do not use the current demo checkout as a production payment or inventory
-system. Reliable sales, debt, and stock records require backend persistence and
-appropriate transaction handling.
-
-## Run the frontend
-
-Open `src/frontend/index.html` using a static development server such as the
-VS Code Live Server extension. Navigate to the Point of Sales page to try the
-current cart and checkout flow.
-
-The frontend does not require an npm install for its current behavior. Some
-fonts and icons are loaded from external CDNs and may require an internet
-connection.
-
-## Backend shell
-
-From the repository root, the currently empty Flask shell can be started with:
+Use Python 3.10 or later. Install the backend packages from the repository root:
 
 ```powershell
+py -3.10 -m pip install -r src\backend\requirements.txt
+```
+
+Set the connection settings in the same PowerShell window where Flask is
+started. Replace the user/password values with the credentials for your local
+XAMPP installation. Flask creates a local, ignored secret-key file on its first
+start if `FLASK_SECRET_KEY` is not set; that stable key keeps remembered sessions
+valid across backend restarts. If you set `FLASK_SECRET_KEY` yourself, reuse the
+same value each time you start Flask.
+
+```powershell
+$env:DB_HOST = "127.0.0.1"
+$env:DB_PORT = "3306"
+$env:DB_USER = "root"
+$env:DB_PASSWORD = ""
+$env:DB_NAME = "pos"
 py -3.10 src\backend\app.py
 ```
 
-It intentionally exposes no application API endpoints; starting it does not
-connect the frontend to a database.
+The API listens on `http://127.0.0.1:5000`. Check
+`http://127.0.0.1:5000/api/health` for the process status. Database-backed
+requests also require the migration and a reachable XAMPP database.
+
+## Run the frontend
+
+Open the frontend with VS Code Live Server using port `5500` and visit
+`src/frontend/index.html`. The API allows requests from `localhost:5500` and
+`127.0.0.1:5500`. Keep the Flask terminal and XAMPP MySQL service running while
+using the application.
+
+The welcome page checks for accounts in MySQL. Signup stores passwords as
+Werkzeug hashes and signs the new account in; login verifies the stored hash
+and uses an HTTP-only session cookie. The API requires a signed-in session for
+POS, product, debt, report, and settings requests. Keep the frontend and API on
+the same loopback hostname (`localhost` or `127.0.0.1`) so the session cookie
+can be sent with API requests. “Remember Me” keeps the signed-in session for up
+to 30 days; without it, the session cookie expires when the browser session
+ends. When “Remember login on this device” is checked, the login page can save
+and retrieve the credentials through the browser's password manager. Credentials
+are not stored by the application in localStorage, sessionStorage, or MySQL.
+Leaving it unchecked clears the login fields and does not request credential
+storage. Use the main-system Log out button to clear the server session.
+
+## POS workflows
+
+- Products and stock are loaded from MySQL. Product changes and archive actions
+  are sent to Flask; archived products are hidden from the catalog but remain
+  available to historical transactions.
+- POS checkout locks inventory rows and writes the transaction, line items,
+  stock reduction, and any debt record in one database transaction.
+- Repeated debts for the same customer identity (contact number when entered,
+  otherwise normalized customer name) update the existing balance and retain
+  each sale grouped by its transaction date.
+- Partial/full debt payments are recorded in payment history. Fully paid debts
+  no longer show the payment action. Debt deletion is a soft archive; sales and
+  payment history are retained.
+- Dashboard, sales report, and history filters read from the database.
+- Settings can be saved and all product, transaction, and debt data can be
+  exported as JSON or CSV. Import is not offered.
+
+The POS records operator transactions under a generated `POS-SYSTEM` user row
+when that configured user ID does not already exist. Set `POS_USER_ID` before
+starting Flask to use a different operator ID.
+
+## Current limitations
+
+The API is intended for local development and does not provide HTTPS,
+multi-factor authentication, account recovery, or production deployment
+hardening. Do not expose the development server or database to the public
+internet.
+
+Products that existed only in browser `localStorage` are not copied to MySQL
+automatically. They remain in that browser's site data, but the revised POS no
+longer reads them; add the products to the MySQL-backed catalog before checkout.

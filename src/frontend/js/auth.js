@@ -1,3 +1,37 @@
+const AUTH_API_HOST = window.location.hostname || '127.0.0.1';
+const AUTH_API_BASE = `http://${AUTH_API_HOST}:5000/api`;
+const FRONTEND_ROOT_URL = new URL('../', document.currentScript.src);
+const SIGNUP_STEP_URL = new URL('pages/funnel/signup2.html', FRONTEND_ROOT_URL);
+const SIGNUP_PAGE_URL = new URL('pages/signup.html', FRONTEND_ROOT_URL);
+const DASHBOARD_PAGE_URL = new URL('pages/dashboard.html', FRONTEND_ROOT_URL);
+const WELCOME_PAGE_URL = new URL('index.html', FRONTEND_ROOT_URL);
+
+async function authApiRequest(path, options = {}) {
+    let response;
+    try {
+        response = await fetch(`${AUTH_API_BASE}${path}`, {
+            ...options,
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error(
+                `Flask API is unreachable at ${AUTH_API_BASE}. Start the backend and check the XAMPP connection.`
+            );
+        }
+        throw error;
+    }
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        throw new Error(result.error || `Request failed (${response.status}).`);
+    }
+    return result;
+}
+
 // Sign Up authentication function
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -32,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 email: document.getElementById('user-email').value.trim(),
                 contact_number: document.getElementById('user-phone').value.trim()
             }));
-            window.location.href = 'funnel/signup2.html';
+            window.location.href = SIGNUP_STEP_URL.href;
         })
     }
 
@@ -233,34 +267,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function showSaveConfirmation() {
-            showModal('Signup flow complete (preview only). Your account was not saved. Continue?');
+            showModal('Account saved to the database and login successful. Continue to the POS?');
 
             const check = document.createElement('span');
             check.className = 'modal-success-check';
             check.textContent = '✓';
-            check.setAttribute('aria-label', 'Signup preview complete; account not saved');
+            check.setAttribute('aria-label', 'Account saved and signed in');
             modalStatus.appendChild(check);
 
-            addModalButton('Yes', () => {
-                window.location.href = '/src/frontend/pages/dashboard.html';
+            addModalButton('Continue', () => {
+                sessionStorage.removeItem('signup-profile');
+                window.location.href = DASHBOARD_PAGE_URL.href;
             });
 
-            addModalButton('No', () => {
-                showModal('Do you want to exit?', [
-                    {
-                        label: 'Yes',
-                        onClick: () => {
-                            sessionStorage.removeItem('signup-profile');
-                            window.location.href = '/src/frontend/index.html';
-                        }
-                    },
-                    {
-                        label: 'No',
-                        onClick: () => {
-                            window.location.href = '/src/frontend/pages/dashboard.html';
-                        }
-                    }
-                ]);
+            addModalButton('Not now', async () => {
+                try {
+                    await authApiRequest('/auth/logout', { method: 'POST' });
+                    sessionStorage.removeItem('signup-profile');
+                    window.location.href = WELCOME_PAGE_URL.href;
+                } catch (error) {
+                    showSaveError(error.message);
+                }
             });
         }
 
@@ -273,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
             modalButtons.appendChild(button);
         }
 
-        function saveCredentials() {
+        async function saveCredentials() {
             const username = modalUsername.value.trim();
             const password = modalPassword.value;
 
@@ -290,12 +317,30 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             saving = true;
-            showLoading('Checking signup credentials...');
-            modalPassword.value = '';
-            window.setTimeout(() => {
+            showLoading('Saving account and signing in...');
+            const profileText = sessionStorage.getItem('signup-profile');
+            let profile;
+            try {
+                profile = profileText ? JSON.parse(profileText) : null;
+                if (!profile || !profile.name || !profile.email || !profile.contact_number) {
+                    throw new Error('Signup details are missing. Return to the signup form and try again.');
+                }
+                await authApiRequest('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        ...profile,
+                        user_id: username,
+                        password
+                    })
+                });
+                modalPassword.value = '';
                 saving = false;
                 showSaveConfirmation();
-            }, 1200);
+            } catch (error) {
+                saving = false;
+                modalPassword.value = '';
+                showSaveError(error.message);
+            }
         }
 
         /* function checkCredentialFields() {
@@ -319,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             {
                                 label: 'Okay',
                                 onClick: () => {
-                                    goWithLoading('Loading...', '/src/frontend/index.html');
+                                    goWithLoading('Returning to welcome page...', WELCOME_PAGE_URL.href);
                                 }
                             }
                         ]);
@@ -332,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             {
                                 label: 'Yes',
                                 onClick: () => {
-                                    window.location.href = '/src/frontend/pages/signup.html';
+                                    window.location.href = SIGNUP_PAGE_URL.href;
                                 }
                             },
                             {
@@ -346,31 +391,148 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Login page placeholder while backend integration is disconnected.
+    // Login uses the Flask API; the API keeps the authenticated session in an HTTP-only cookie.
     const loginForm = document.querySelector('.login-container form');
     const loginModal = document.getElementById('custom-modal');
     const loginModalMessage = document.getElementById('modal-msg-text');
     const loginModalButtons = document.getElementById('modal-btn-container');
 
     if (loginForm && loginModal && loginModalMessage && loginModalButtons) {
-        loginForm.addEventListener('submit', (event) => {
+        const rememberCheckbox = loginForm.querySelector('#remember-me');
+        const userIdInput = loginForm.querySelector('#user-id');
+        const passwordInput = loginForm.querySelector('#password');
+        const accountUserIds = loginForm.querySelector('#account-user-ids');
+        const loginStatus = document.getElementById('login-status');
+        const rememberHint = document.getElementById('remember-hint');
+        const savedPasswordCredentialsAvailable =
+            navigator.credentials && typeof window.PasswordCredential === 'function';
+
+        function setCredentialAutofill(enabled) {
+            userIdInput.autocomplete = enabled ? 'username' : 'off';
+            passwordInput.autocomplete = enabled ? 'current-password' : 'off';
+            loginForm.autocomplete = enabled ? 'on' : 'off';
+        }
+
+        function clearLoginFields() {
+            passwordInput.value = '';
+        }
+
+        clearLoginFields();
+        setCredentialAutofill(false);
+        authApiRequest('/auth/user-ids')
+            .then(({ user_ids: userIds }) => {
+                accountUserIds.replaceChildren();
+                userIds.forEach(userId => {
+                    const option = document.createElement('option');
+                    option.value = userId;
+                    accountUserIds.appendChild(option);
+                });
+                if (!userIdInput.value && userIds.length === 1) {
+                    userIdInput.value = userIds[0];
+                }
+            })
+            .catch(error => {
+                console.error('Could not load account IDs for login:', error);
+                loginStatus.textContent = 'Could not load the saved user ID. Enter it manually.';
+            });
+
+        rememberCheckbox.addEventListener('change', async () => {
+            rememberHint.textContent = '';
+            if (!rememberCheckbox.checked) {
+                clearLoginFields();
+                setCredentialAutofill(false);
+                return;
+            }
+
+            setCredentialAutofill(true);
+            if (!savedPasswordCredentialsAvailable) {
+                rememberHint.textContent =
+                    'Use your browser password manager. Access on other devices depends on its sync settings.';
+                return;
+            }
+
+            try {
+                const credential = await navigator.credentials.get({
+                    password: true,
+                    mediation: 'silent'
+                });
+                if (credential?.type === 'password') {
+                    userIdInput.value = credential.id;
+                    passwordInput.value = credential.password;
+                } else {
+                    rememberHint.textContent =
+                        'No saved login was found. Sign in with this checked to save it in your browser password manager.';
+                }
+            } catch (error) {
+                console.error('Could not retrieve saved browser credentials:', error);
+                rememberHint.textContent =
+                    'Could not retrieve saved credentials. Enter them manually or check your browser password manager.';
+            }
+        });
+
+        authApiRequest('/auth/me')
+            .then(({ user }) => {
+                if (user) window.location.href = DASHBOARD_PAGE_URL.href;
+            })
+            .catch(error => {
+                console.warn('Could not check the existing login session:', error);
+            });
+
+        loginForm.addEventListener('submit', async (event) => {
             event.preventDefault();
             const submitButton = loginForm.querySelector('button[type="submit"]');
             submitButton.disabled = true;
-
-            loginModalMessage.textContent = 'Backend is disconnected. Login is temporarily unavailable.';
+            loginModalMessage.textContent = 'Signing in…';
             loginModalButtons.replaceChildren();
 
-            const closeButton = document.createElement('button');
-            closeButton.type = 'button';
-            closeButton.className = 'modal-btn modal-btn-primary';
-            closeButton.textContent = 'Close';
-            closeButton.addEventListener('click', () => {
-                loginModal.classList.remove('active');
-            });
-            loginModalButtons.appendChild(closeButton);
             loginModal.classList.add('active');
-            submitButton.disabled = false;
+            try {
+                await authApiRequest('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        user_id: userIdInput.value.trim(),
+                        password: passwordInput.value,
+                        remember: rememberCheckbox.checked
+                    })
+                });
+
+                if (rememberCheckbox.checked) {
+                    if (savedPasswordCredentialsAvailable) {
+                        try {
+                            await navigator.credentials.store(new window.PasswordCredential(loginForm));
+                            rememberHint.textContent = 'Login saved in your browser password manager.';
+                        } catch (error) {
+                            console.error('Could not save credentials in the browser password manager:', error);
+                            rememberHint.textContent =
+                                'Login succeeded, but your browser could not save the credentials.';
+                        }
+                    } else {
+                        rememberHint.textContent =
+                            'Login succeeded. Use your browser password manager; other-device access depends on its sync settings.';
+                    }
+                }
+
+                loginModalMessage.textContent = 'Login successful.';
+                const success = document.createElement('span');
+                success.className = 'modal-success-check';
+                success.textContent = '✓';
+                loginModalButtons.appendChild(success);
+                window.setTimeout(() => {
+                    window.location.href = DASHBOARD_PAGE_URL.href;
+                }, 700);
+            } catch (error) {
+                loginModalMessage.textContent = error.message;
+                const closeButton = document.createElement('button');
+                closeButton.type = 'button';
+                closeButton.className = 'modal-btn modal-btn-primary';
+                closeButton.textContent = 'Close';
+                closeButton.addEventListener('click', () => {
+                    loginModal.classList.remove('active');
+                });
+                loginModalButtons.appendChild(closeButton);
+            } finally {
+                submitButton.disabled = false;
+            }
         });
     }
 });

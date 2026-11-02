@@ -133,12 +133,37 @@
 }
 
 body {
-    min-width: 320px;
+    width: 100%;
+    min-width: 0;
     min-height: 100vh;
     margin: 0;
     background: #f5f9f8;
     color: #10212a;
     font-family: 'Poppins', sans-serif;
+}
+
+body,
+h1,
+h2,
+h3,
+p,
+strong,
+small,
+label,
+span,
+a,
+button,
+td,
+th {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+input,
+select,
+textarea {
+    max-width: 100%;
+    min-width: 0;
 }
 
 .dashboard-wrapper {
@@ -153,6 +178,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 232px;
+    overflow-y: auto;
     background-color: var(--bg-blue-800);
     color: #e8f3f3;
 }
@@ -226,13 +252,15 @@ body {
 /* Main Dasboard */
 .main-dashboard {
     width: calc(100% - 232px);
+    min-width: 0;
     min-height: 100vh;
     margin-left: 232px;
 }
 .top-navbar {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    justify-content: space-between;
+    gap: 12px;
     min-height: 60px;
     padding: 10px 30px;
     border-bottom: 1px solid #dce7e8;
@@ -240,6 +268,7 @@ body {
 }
 
 .top-navbar h1 {
+    grid-column: 1;
     margin: 0;
     font-size: 19px;
     font-weight: 600;
@@ -247,7 +276,10 @@ body {
 
 .new-sale-btn {
     display: inline-flex;
+    grid-column: 3;
+    grid-row: 1;
     align-items: center;
+    justify-self: end;
     gap: 7px;
     padding: 9px 15px;
     border-radius: 10px;
@@ -444,6 +476,18 @@ body {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: start;
     gap: 12px;
+}
+
+/* Keep the catalog layout while product data is not connected. */
+.product-loading {
+    display: grid;
+    grid-column: 1 / -1;
+    min-height: 180px;
+    margin: 0;
+    place-items: center;
+    color: #687d86;
+    font-size: 14px;
+    text-align: center;
 }
 
 .product-card {
@@ -811,10 +855,10 @@ body {
     max-height: calc(100vh - 32px);
     padding: 22px 24px;
     overflow-y: auto;
-    border: 1px solid #d8e4e6;
+    border: 1px solid #b8b8ff;
     border-radius: 14px;
-    background: #f7fbfa;
-    color: #10212a;
+    background: #f2f2ff;
+    color: #000075;
     box-shadow: 0 18px 48px rgba(0, 19, 31, 0.24);
 }
 
@@ -836,34 +880,41 @@ body {
 
 .receipt-dialog-header h2 {
     margin: 0;
+    color: #000075;
     font-size: 19px;
     font-weight: 600;
 }
 
+.receipt-dialog .checkout-close {
+    color: #000075;
+}
+
 .receipt-paper {
     padding: 16px;
-    border: 1px solid #d4e1e3;
+    border: 1px solid #b8b8ff;
     border-radius: 12px;
-    background: #fff;
+    background: #f7f7ff;
+    color: #000075;
     font-family: 'Courier New', monospace;
     font-size: 13px;
 }
 
 .receipt-paper-header {
     padding-bottom: 12px;
-    border-bottom: 1px solid #dce7e8;
+    border-bottom: 1px solid #b8b8ff;
     text-align: center;
 }
 
 .receipt-paper-header h3 {
     margin: 0 0 6px;
+    color: #000075;
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
 }
 
 .receipt-paper-header p {
     margin: 2px 0;
-    color: #52666d;
+    color: #000075;
     font-size: 11px;
 }
 
@@ -873,7 +924,7 @@ body {
 
 .receipt-line {
     padding: 12px 0;
-    border-bottom: 1px solid #dce7e8;
+    border-bottom: 1px solid #b8b8ff;
 }
 
 .receipt-line-heading {
@@ -894,7 +945,7 @@ body {
 .receipt-line small {
     display: block;
     margin-top: 4px;
-    color: #52666d;
+    color: #000075;
     font-size: 11px;
 }
 
@@ -903,7 +954,7 @@ body {
     gap: 4px;
     margin: 0;
     padding: 12px 0;
-    border-bottom: 1px solid #dce7e8;
+    border-bottom: 1px solid #b8b8ff;
 }
 
 .receipt-totals > div {
@@ -919,6 +970,7 @@ body {
 
 .receipt-thanks {
     margin: 12px 0 0;
+    color: #000075;
     text-align: center;
     font-size: 11px;
 }
@@ -936,6 +988,20 @@ body {
     align-items: center;
     justify-content: center;
     gap: 6px;
+}
+
+.receipt-actions .checkout-cancel {
+    border-color: #b8b8ff;
+    background: #f7f7ff;
+}
+
+.receipt-actions .checkout-complete {
+    border-color: #000075;
+    background: #000075;
+}
+
+.receipt-actions .checkout-complete:hover {
+    background: #000047;
 }
 
 @media print {
@@ -1034,12 +1100,10 @@ body {
 }
 
 .order-item-name {
-    overflow: hidden;
     color: #10212a;
     font-size: 14px;
     font-weight: 500;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .order-item-price {
@@ -1092,6 +1156,299 @@ body {
     display: flex;
     min-height: 100vh;
 }
+
+/* Product management page uses its own full-width layout, separate from POS. */
+.product-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    min-width: 0;
+    min-height: calc(100vh - 60px);
+    padding: 24px;
+}
+
+.product-page-catalog {
+    width: 100%;
+    min-width: 0;
+    min-height: calc(100vh - 108px);
+    padding: 16px;
+    border: 1px solid #d8e4e6;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 5px 14px rgba(20, 48, 54, 0.08);
+}
+
+.product-page-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(200px, 260px) auto;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 14px;
+}
+
+.product-page-search,
+.product-page-category {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #d8e4e6;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #10212a;
+    font: inherit;
+    font-size: 13px;
+    box-shadow: 0 2px 5px rgba(20, 48, 54, 0.08);
+}
+
+.product-page-search:focus,
+.product-page-category:focus {
+    outline: 2px solid var(--bg-cyan-500);
+    outline-offset: 1px;
+}
+
+.product-page-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: start;
+    gap: 12px;
+}
+
+.product-page-loading {
+    display: grid;
+    grid-column: 1 / -1;
+    min-height: 180px;
+    margin: 0;
+    place-items: center;
+    color: #687d86;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Product inventory table and Add Product dialog. */
+.add-product-button,
+.add-product-save {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 42px;
+    padding: 0 16px;
+    border: 1px solid var(--bg-blue-800);
+    border-radius: 10px;
+    background: var(--bg-blue-800);
+    color: #ffffff;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.add-product-button:hover,
+.add-product-save:hover {
+    background: var(--bg-blue-900);
+}
+
+.product-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #d8e4e6;
+    border-radius: 12px;
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    text-align: left;
+}
+
+.product-table th,
+.product-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5eeee;
+    white-space: nowrap;
+}
+
+.product-table th {
+    background: #f3f8f8;
+    color: #10212a;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.product-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.product-table #no-products-row td {
+    height: 100px;
+    color: #687d86;
+    text-align: center;
+}
+
+.product-table .low-stock {
+    color: #b42318;
+    font-weight: 600;
+}
+
+.product-row-actions {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.product-table th:last-child,
+.product-table td.product-row-actions{
+    text-align: center;
+    vertical-align: center;
+}
+
+.product-row-actions .product-action-button {
+    display: inline-grid;
+    vertical-align: middle;
+}
+
+.product-action-button {
+    display: inline-grid;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    padding: 0;
+    margin: 0 3px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.product-action-button i {
+    font-size: 17px;
+}
+
+.product-edit-button {
+    color: #10212a;
+}
+
+.product-edit-button:hover {
+    background: #eef2ff;
+    color: var(--bg-blue-800);
+}
+
+.product-delete-button {
+    color: #ff2e2e;
+}
+
+.product-delete-button:hover {
+    background: #ffe6e6;
+    color: #d10000;
+}
+
+.add-product-dialog {
+    width: min(520px, calc(100vw - 32px));
+    max-width: 520px;
+    max-height: calc(100vh - 32px);
+    padding: 22px 24px;
+    overflow-y: auto;
+    border: 1px solid #d8e4e6;
+    border-radius: 14px;
+    background: #f7fbfa;
+    color: #10212a;
+    box-shadow: 0 18px 48px rgba(0, 19, 31, 0.24);
+}
+
+.add-product-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.72);
+}
+
+.add-product-dialog [hidden] {
+    display: none !important;
+}
+
+.add-product-dialog form {
+    display: grid;
+    gap: 16px;
+}
+
+.add-product-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.add-product-heading h2 {
+    margin: 0;
+    font-size: 19px;
+}
+
+.add-product-close {
+    display: grid;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: #52666d;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.add-product-field {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+    font-size: 13px;
+}
+
+.add-product-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 12px;
+}
+
+.add-product-field input,
+.add-product-field select {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #d4e1e3;
+    border-radius: 10px;
+    background: #f7fbfa;
+    color: #10212a;
+    font: inherit;
+}
+
+.add-product-field input:focus,
+.add-product-field select:focus {
+    outline: 2px solid var(--bg-cyan-500);
+    outline-offset: 1px;
+}
+
+.add-product-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.add-product-cancel {
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid #d4e1e3;
+    border-radius: 10px;
+    background: transparent;
+    color: #10212a;
+    font: inherit;
+    cursor: pointer;
+}
+
+.add-product-error {
+    margin: 0;
+    color: #b42318;
+    font-size: 13px;
+}
+
+
 
 /* Debts */
 .debts-wrapper {
@@ -1185,6 +1542,41 @@ body {
     }
 }
 
+/* Product management page responsive layout. */
+@media(max-width: 1000px) {
+    .product-content {
+        padding: 16px;
+    }
+
+    .product-page-catalog {
+        min-height: calc(100vh - 92px);
+    }
+
+    .product-page-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media(max-width: 700px) {
+    .product-page-toolbar {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .product-page-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .add-product-fields {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media(max-width: 420px) {
+    .product-page-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
 @media(max-width: 700px) {
     .pos-content {
         grid-template-columns: minmax(0, 1fr);
@@ -1244,5 +1636,550 @@ body {
     .checkout-fields {
         grid-template-columns: minmax(0, 1fr);
         gap: 14px;
+    }
+}
+
+/* Database-backed debts, sales reports, history, and preferences. */
+.debts-content,
+.report-content,
+.settings-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 18px;
+    min-width: 0;
+    padding: 24px;
+}
+
+.debts-catalog,
+.report-panel,
+.settings-panel {
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid #d8e4e6;
+    border-radius: 13px;
+    background: #fff;
+    box-shadow: 0 5px 14px rgba(20, 48, 54, 0.04);
+}
+
+.debts-toolbar,
+.report-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.debts-toolbar input,
+.debts-toolbar select,
+.report-toolbar input,
+.report-toolbar select,
+.settings-panel input,
+.debt-payment-field input {
+    min-height: 42px;
+    padding: 9px 12px;
+    border: 1px solid #d4e1e3;
+    border-radius: 9px;
+    background: #fff;
+    color: #10212a;
+    font: inherit;
+}
+
+.debts-toolbar input,
+.report-toolbar input {
+    flex: 1 1 260px;
+}
+
+.debts-table-wrap,
+.report-table-wrap {
+    overflow-x: auto;
+}
+
+.debts-table,
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #233740;
+    font-size: 13px;
+}
+
+.debts-table th,
+.debts-table td,
+.report-table th,
+.report-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e8eff0;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.debts-table th,
+.report-table th {
+    color: #52666d;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.debt-row-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.debt-row-actions button,
+.debt-dialog-actions button,
+.settings-panel button {
+    min-height: 34px;
+    padding: 7px 10px;
+    border: 1px solid #cbdcde;
+    border-radius: 8px;
+    background: #f5fafb;
+    color: #103440;
+    font: inherit;
+    cursor: pointer;
+}
+
+.debt-row-actions button {
+    width: 34px;
+    padding: 5px;
+}
+
+.debt-row-actions button:hover,
+.debt-dialog-actions button:hover,
+.settings-panel button:hover {
+    background: #dff3f5;
+}
+
+.debt-customer-paid {
+    color: #7b8790;
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+}
+
+.debt-status-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.debt-status-badge.status-paid {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.debt-status-badge.status-partial {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.debt-status-badge.status-unpaid {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.pos-dialog {
+    width: min(720px, calc(100vw - 28px));
+    max-height: min(85vh, 780px);
+    padding: 22px;
+    overflow: auto;
+    border: 0;
+    border-radius: 14px;
+    box-shadow: 0 20px 70px rgba(15, 35, 40, 0.25);
+}
+
+.pos-dialog::backdrop { background: rgba(15, 35, 40, 0.45); }
+
+.debt-dialog-heading,
+.debt-dialog-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.debt-dialog-heading h2 { margin: 0; }
+.debt-dialog-heading p { color: #5c7078; }
+.debt-close {
+    border: 0;
+    background: transparent;
+    font-size: 26px;
+    cursor: pointer;
+}
+.debt-date-group { margin: 18px 0; }
+.debt-date-group h3 { margin: 0 0 8px; }
+.debt-payment-field { display: grid; gap: 8px; margin: 18px 0; }
+.debt-dialog-actions { justify-content: flex-end; margin-top: 20px; }
+#debt-payment-error, #debts-message, #sales-message, #history-message,
+#settings-message { color: #a12b24; }
+#settings-message.is-success { color: #087443; }
+#settings-message.is-info { color: #72520a; }
+
+.report-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.report-panel .panel-heading h2,
+.settings-panel h2 { margin: 0 0 12px; font-size: 16px; }
+
+.settings-panel { max-width: 760px; }
+.settings-panel form { display: grid; gap: 16px; }
+.settings-panel label { display: grid; gap: 8px; color: #334b54; }
+.settings-panel input { width: 100%; max-width: 100%; }
+.settings-panel button { justify-self: start; padding-inline: 16px; }
+
+.dashboard-data-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(90px, auto) minmax(90px, auto);
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e8eff0;
+    font-size: 13px;
+}
+
+.dashboard-data-row td { overflow: hidden; text-overflow: ellipsis; }
+
+@media (max-width: 800px) {
+    .report-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .debts-content, .report-content, .settings-content { padding: 16px; }
+}
+
+@media (max-width: 480px) {
+    .report-summary-grid { grid-template-columns: minmax(0, 1fr); }
+    .debts-table th, .debts-table td, .report-table th, .report-table td {
+        padding: 9px 7px;
+    }
+}
+
+@media print {
+    body * { visibility: hidden !important; }
+    #debt-details-dialog[open],
+    #debt-details-dialog[open] * { visibility: visible !important; }
+    #debt-details-dialog[open] {
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
+        max-height: none;
+        overflow: visible;
+        box-shadow: none;
+    }
+    #debt-details-dialog .debt-dialog-actions,
+    #debt-details-dialog .debt-close { display: none; }
+}
+
+.logout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 40px;
+    padding: 8px 13px;
+    flex: 0 0 auto;
+    margin: auto 8px 14px;
+    width: calc(100% - 16px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #e8f3f3;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.logout-btn:hover:not(:disabled) {
+    border-color: #efb6b2;
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+}
+
+.logout-btn:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+@media (max-width: 700px) {
+    .sidebar {
+        width: 68px;
+    }
+
+    .brand {
+        justify-content: center;
+        padding-inline: 8px;
+    }
+
+    .brand-copy,
+    .nav-item span {
+        display: none;
+    }
+
+    .sidebar-nav {
+        padding-inline: 8px;
+    }
+
+    .nav-item {
+        justify-content: center;
+        padding-inline: 0;
+    }
+
+    .logout-btn {
+        justify-content: center;
+        margin-inline: 8px;
+        padding-inline: 0;
+    }
+
+    .sidebar .logout-btn span {
+        display: none;
+    }
+
+    .main-dashboard {
+        width: calc(100% - 68px);
+        min-width: 0;
+        margin-left: 68px;
+    }
+
+    .top-navbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+    }
+
+    .top-navbar h1 {
+        grid-column: 1;
+        grid-row: 1;
+        font-size: 18px;
+    }
+
+    .new-sale-btn {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+    }
+
+    .dashboard-content,
+    .pos-content,
+    .product-content,
+    .debts-content,
+    .report-content,
+    .settings-content {
+        min-width: 0;
+        padding: 14px;
+    }
+
+    .product-toolbar {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pos-dialog {
+        width: calc(100vw - 24px);
+        max-height: calc(100dvh - 24px);
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 12px;
+    }
+
+    .sidebar {
+        width: 56px;
+    }
+
+    .brand-mark {
+        width: 30px;
+        height: 30px;
+        flex-basis: 30px;
+    }
+
+    .sidebar-nav {
+        gap: 7px;
+        padding: 12px 6px;
+    }
+
+    .nav-item {
+        min-height: 42px;
+    }
+
+    .main-dashboard {
+        width: calc(100% - 56px);
+        margin-left: 56px;
+    }
+
+    .top-navbar {
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .top-navbar h1 {
+        font-size: clamp(13px, 3.8vw, 15px);
+        line-height: 1.25;
+    }
+
+    .new-sale-btn,
+    .sidebar .logout-btn {
+        min-height: 38px;
+        padding: 8px 10px;
+    }
+
+    .new-sale-btn {
+        font-size: 12px;
+    }
+
+    .new-sale-btn span {
+        display: none;
+    }
+
+    .sidebar .logout-btn {
+        width: calc(100% - 16px);
+        padding-inline: 0;
+    }
+
+    .dashboard-content,
+    .pos-content,
+    .product-content,
+    .debts-content,
+    .report-content,
+    .settings-content {
+        gap: 12px;
+        padding: 10px;
+    }
+
+    .product-catalog,
+    .product-page-catalog,
+    .order-panel,
+    .debts-catalog,
+    .report-panel,
+    .settings-panel {
+        padding: 12px;
+    }
+
+    .summary-grid,
+    .report-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .summary-card {
+        gap: 8px;
+        padding: 11px;
+    }
+
+    .summary-card p {
+        font-size: 10px;
+        line-height: 1.3;
+    }
+
+    .summary-card strong {
+        font-size: clamp(14px, 4vw, 16px);
+        overflow-wrap: anywhere;
+    }
+
+    .panel-heading h2,
+    .report-panel .panel-heading h2,
+    .settings-panel h2 {
+        font-size: 12px;
+        line-height: 1.3;
+    }
+
+    .empty-message,
+    .dashboard-data-row,
+    .settings-panel p,
+    #dashboard-transactions-empty,
+    #dashboard-low-stock-empty,
+    #debts-message,
+    #sales-message,
+    #history-message,
+    #settings-message,
+    .product-loading {
+        font-size: 10px;
+        line-height: 1.35;
+    }
+
+    .summary-card p,
+    .panel-heading h2,
+    .empty-message,
+    .dashboard-data-row span,
+    .settings-panel p,
+    #dashboard-transactions-empty,
+    #dashboard-low-stock-empty,
+    #debts-message,
+    #sales-message,
+    #history-message,
+    #settings-message {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+    }
+
+    .debts-table,
+    .report-table {
+        font-size: 10px;
+    }
+
+    .product-name {
+        font-size: 12px;
+    }
+
+    .product-category,
+    .stock-badge {
+        font-size: 9px;
+    }
+
+    .order-item-name {
+        font-size: 12px;
+        line-height: 1.3;
+    }
+
+    .order-item-price {
+        font-size: 10px;
+    }
+
+    .order-count,
+    .panel-badge {
+        font-size: 9px;
+    }
+
+    .product-grid,
+    .product-page-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dashboard-data-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 360px) {
+    .top-navbar h1 {
+        font-size: 12px;
+    }
+
+    .summary-grid,
+    .report-summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .product-toolbar,
+    .product-page-toolbar {
+        gap: 8px;
+    }
+
+    .checkout-dialog {
+        width: calc(100vw - 20px);
+        max-width: none;
+        padding: 14px;
     }
 }

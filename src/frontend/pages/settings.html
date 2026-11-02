@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/font.css">
+    <link rel="stylesheet" href="../styles/main-system.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <title>MRB-POS | Settings</title>
+</head>
+<body>
+    <div class="settings-wrapper">
+        <aside class="sidebar">
+            <a href="dashboard.html" class="brand"><span class="brand-mark">M</span><span class="brand-copy"><strong>MRB-POS</strong><small>POS &amp; Inventory</small></span></a>
+            <nav class="sidebar-nav" aria-label="Main menu">
+                <a href="dashboard.html" class="nav-item"><i class="bx bx-grid-alt"></i><span>Dashboard</span></a>
+                <a href="funnel/pos.html" class="nav-item"><i class="bx bx-cart"></i><span>Point of Sales</span></a>
+                <a href="funnel/product.html" class="nav-item"><i class="bx bx-package"></i><span>Product</span></a>
+                <a href="funnel/debts.html" class="nav-item"><i class="bx bx-credit-card"></i><span>Debts</span></a>
+                <a href="funnel/sales.html" class="nav-item"><i class="bx bx-bar-chart-alt-2"></i><span>Sales</span></a>
+                <a href="history.html" class="nav-item"><i class="bx bx-history"></i><span>History</span></a>
+                <a href="settings.html" class="nav-item active"><i class="bx bx-cog"></i><span>Settings</span></a>
+            </nav>
+        </aside>
+        <div class="main-dashboard">
+            <header class="top-navbar"><h1>Settings</h1><a class="new-sale-btn" href="funnel/pos.html"><i class="bx bx-cart"></i><span>New Sale</span></a></header>
+            <main class="settings-content">
+                <section class="settings-panel">
+                    <h2>Store preferences</h2>
+                    <form id="settings-form">
+                        <label>Store name<input id="settings-store-name" name="store_name" type="text" maxlength="100" required></label>
+                        <label>Currency symbol<input id="settings-currency-symbol" name="currency_symbol" type="text" maxlength="5" required></label>
+                        <p id="settings-message" role="status" aria-live="polite"></p>
+                        <button type="submit"><i class="bx bx-save" aria-hidden="true"></i> Save settings</button>
+                    </form>
+                </section>
+                <section class="settings-panel">
+                    <h2>Data backup</h2>
+                    <p>Download products, sales, and debt records as a JSON backup or CSV file. Import is not available.</p>
+                    <div class="settings-export-actions">
+                        <button id="settings-export" type="button"><i class="bx bx-data" aria-hidden="true"></i> Export JSON backup</button>
+                        <button id="settings-export-csv" type="button"><i class="bx bx-spreadsheet" aria-hidden="true"></i> Export CSV</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script src="../js/main-system.js"></script>
+</body>
+</html>

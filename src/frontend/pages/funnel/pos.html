@@ -40,25 +40,25 @@
                 </a>
 
                 <!-- Debts -->
-                <a href="#debts" class="nav-item">
+                <a href="debts.html" class="nav-item">
                     <i class="bx bx-credit-card" aria-hidden="true"></i>
                     <span>Debts</span>
                 </a>
 
                 <!-- New Sales -->
-                <a href="#sales" class="nav-item">
-                    <i class="bx bx-plus-circle" aria-hidden="true"></i>
-                    <span>New Sales</span>
+                <a href="sales.html" class="nav-item">
+                    <i class="bx bx-bar-chart-alt-2" aria-hidden="true"></i>
+                    <span>Sales</span>
                 </a>
 
                 <!-- History -->
-                <a href="#history" class="nav-item">
+                <a href="../history.html" class="nav-item">
                     <i class="bx bx-history" aria-hidden="true"></i>
                     <span>History</span>
                 </a>
 
                 <!-- Pos-Setting -->
-                <a href="#settings" class="nav-item">
+                <a href="../settings.html" class="nav-item">
                     <i class="bx bx-cog" aria-hidden="true"></i>
                     <span>Settings</span>
                 </a>
@@ -69,7 +69,7 @@
         <div class="main-dashboard">
             <header class="top-navbar">
                 <h1>Point of Sales</h1>
-                <a class="new-sale-btn" href="../funnel/sales.html">
+                <a class="new-sale-btn" href="pos.html">
                     <i class="bx bx-cart" aria-hidden="true"></i>
                     <span>New Sales</span>
                 </a>
@@ -86,47 +86,14 @@
                             <option value="noodles">Noodles</option>
                             <option value="snacks">Snacks</option>
                             <option value="beverages">Beverages</option>
-                            <option value="noodles">Households</option>
+                            <option value="households">Households</option>
                             <option value="others">Others</option>
                         </select>
                     </div>
 
-                    <div class="product-grid">
-                        <button class="product-card" type="button" id="product-bear-brand">
-                            <span class="product-category">Dairy</span>
-                            <strong class="product-name">Bear Brand Powdered Milk (swak)</strong>
-                            <span class="product-details">
-                                <span class="product-price">₱16.00</span>
-                                <span class="stock-badge">20 left</span>
-                            </span>
-                        </button>
-
-                        <button class="product-card" type="button" id="product-lucky-me">
-                            <span class="product-category">Noodles</span>
-                            <strong class="product-name">Lucky Me Pancit Canton</strong>
-                            <span class="product-details">
-                                <span class="product-price">₱18.00</span>
-                                <span class="stock-badge">20 left</span>
-                            </span>
-                        </button>
-
-                        <button class="product-card" type="button" id="product-skyflakes">
-                            <span class="product-category">Snacks</span>
-                            <strong class="product-name">Skyflakes Crackers</strong>
-                            <span class="product-details">
-                                <span class="product-price">₱10.00</span>
-                                <span class="stock-badge">10 left</span>
-                            </span>
-                        </button>
-
-                        <button class="product-card" type="button" id="product-coca-cola">
-                            <span class="product-category">Beverages</span>
-                            <strong class="product-name">Coca-Cola 16oz</strong>
-                            <span class="product-details">
-                                <span class="product-price">₱12.00</span>
-                                <span class="stock-badge">12 left</span>
-                            </span>
-                        </button>
+                    <!-- Product cards are loaded from the Flask/MySQL API. -->
+                    <div class="product-grid" id="product-grid" aria-live="polite">
+                        <p class="product-loading" role="status">Waiting to load products...</p>
                     </div>
                 </section>
 
@@ -193,13 +160,13 @@
                             <span>Payment method</span>
                             <select id="checkout-payment-method" name="paymentMethod">
                                 <option value="cash">Cash</option>
-                                <option value="gcash">GCash</option>
+                                <option value="gcash">GCash (Soon to add)</option>
                             </select>
                         </label>
 
                         <label class="checkout-field" data-checkout-section="cash">
                             <span>Cash received</span>
-                            <input id="checkout-cash-received" name="cashReceived" type="number" min="0" step="0.01" inputmode="decimal" value="0.00" placeholder="0.00">
+                            <input id="checkout-cash-received" name="cashReceived" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00">
                         </label>
                         <p class="checkout-calculation" data-checkout-section="change" hidden>
                             Change: <strong id="checkout-change">₱0.00</strong>
@@ -211,7 +178,7 @@
 
                         <label class="checkout-field" data-checkout-section="partial" hidden>
                             <span>Down payment</span>
-                            <input id="checkout-down-payment" name="downPayment" type="number" min="0" step="0.01" inputmode="decimal" value="0.00" placeholder="0.00">
+                            <input id="checkout-down-payment" name="downPayment" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00">
                         </label>
                         <p class="checkout-calculation" data-checkout-section="balance" hidden>
                             Remaining balance: <strong id="checkout-balance">₱0.00</strong>

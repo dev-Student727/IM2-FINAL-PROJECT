@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../styles/main-system.css">
-    <link rel="stylesheet" href="../../styles/main-system.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <title>Point of Sales</title>
+    <title>MRB-POS | Products</title>
 </head>
 <body>
     <!-- Product Stracture-->
@@ -46,19 +45,19 @@
                 </a>
 
                 <!-- New Sales -->
-                <a href="#sales" class="nav-item">
-                    <i class="bx bx-plus-circle" aria-hidden="true"></i>
-                    <span>New Sales</span>
+                <a href="sales.html" class="nav-item">
+                    <i class="bx bx-bar-chart-alt-2" aria-hidden="true"></i>
+                    <span>Sales</span>
                 </a>
 
                 <!-- History -->
-                <a href="#history" class="nav-item">
+                <a href="../history.html" class="nav-item">
                     <i class="bx bx-history" aria-hidden="true"></i>
                     <span>History</span>
                 </a>
 
                 <!-- Pos-Setting -->
-                <a href="#settings" class="nav-item">
+                <a href="../settings.html" class="nav-item">
                     <i class="bx bx-cog" aria-hidden="true"></i>
                     <span>Settings</span>
                 </a>
@@ -69,11 +68,112 @@
         <div class="main-dashboard">
             <header class="top-navbar">
                 <h1>Product</h1>
-                <a class="new-sale-btn" href="../funnel/sales.html">
+                <a class="new-sale-btn" href="pos.html">
                     <i class="bx bx-cart" aria-hidden="true"></i>
                     <span>New Sales</span>
                 </a>
             </header>
+
+            <!-- Product page layout is kept separate from the POS page layout. -->
+            <main class="product-content">
+                <section class="product-page-catalog" aria-label="products">
+                    <div class="product-page-toolbar">
+                        <input id="product-search" class="product-page-search" type="search" placeholder="Search by name or its SKU..">
+
+                        <select id="category-filter" class="product-page-category" aria-label="Filter products by category">
+                            <option value="all">All Categories</option>
+                            <option value="dairy">Dairy</option>
+                            <option value="noodles">Noodles</option>
+                            <option value="snacks">Snacks</option>
+                            <option value="beverages">Beverages</option>
+                            <option value="households">Households</option>
+                            <option value="others">Others</option>
+                        </select>
+
+                        <button class="add-product-button" id="open-add-product" type="button">
+                            <i class="bx bx-plus" aria-hidden="true"></i>
+                            Add new product
+                        </button>
+                    </div>
+
+                    <!-- Product inventory rows are created when a product is saved. -->
+                    <div class="product-table-wrap">
+                        <table class="product-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">SKU</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="product-table-body">
+                                <tr id="no-products-row">
+                                    <td colspan="6">No products.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Add Product dialog; the form creates a row in the inventory table. -->
+                <dialog class="add-product-dialog" id="add-product-dialog" aria-labelledby="add-product-title">
+                    <form id="add-product-form">
+                        <div class="add-product-heading">
+                            <h2 id="add-product-title">Add product</h2>
+                            <button class="add-product-close" id="close-add-product" type="button" aria-label="Close dialog">
+                                <i class="bx bx-x" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        <label class="add-product-field">
+                            <span>Name</span>
+                            <input id="new-product-name" name="name" type="text" required>
+                        </label>
+
+                        <div class="add-product-fields">
+                            <label class="add-product-field">
+                                <span>Category</span>
+                                <select id="new-product-category" name="category" required>
+                                    <option value="">Select category</option>
+                                    <option value="Dairy">Dairy</option>
+                                    <option value="Noodles">Noodles</option>
+                                    <option value="Snacks">Snacks</option>
+                                    <option value="Beverages">Beverages</option>
+                                    <option value="Households">Households</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </label>
+                            <label class="add-product-field">
+                                <span>SKU</span>
+                                <input id="new-product-sku" name="sku" type="text" required>
+                            </label>
+                            <label class="add-product-field">
+                                <span>Price</span>
+                                <input id="new-product-price" name="price" type="number" min="0.01" step="0.01" value="0" required>
+                            </label>
+                            <label class="add-product-field">
+                                <span>Stock</span>
+                                <input id="new-product-stock" name="stock" type="number" min="0" step="1" value="0" required>
+                            </label>
+                        </div>
+
+                        <label class="add-product-field">
+                            <span>Low stock threshold</span>
+                            <input id="new-product-threshold" name="threshold" type="number" min="0" step="1" value="5" required>
+                        </label>
+
+                        <p class="add-product-error" id="add-product-error" role="alert" hidden></p>
+
+                        <div class="add-product-actions">
+                            <button class="add-product-cancel" id="cancel-add-product" type="button">Cancel</button>
+                            <button class="add-product-save" type="submit">Save</button>
+                        </div>
+                    </form>
+                </dialog>
+            </main>
         </div>
     </div>
 

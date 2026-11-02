@@ -3,80 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../styles/font.css">
     <link rel="stylesheet" href="../../styles/main-system.css">
-    <link rel="stylesheet" href="../../styles/main-system.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <title>Point of Sales</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <title>MRB-POS | Debts</title>
 </head>
 <body>
-    <!-- Debts Stracture-->
     <div class="debts-wrapper">
         <aside class="sidebar">
-            <a href="#" class="brand">
+            <a href="../dashboard.html" class="brand">
                 <span class="brand-mark">M</span>
-                <span class="brand-copy">
-                    <strong>MRB-POS</strong>
-                    <small>POS &amp; Inventory</small>
-                </span>
+                <span class="brand-copy"><strong>MRB-POS</strong><small>POS &amp; Inventory</small></span>
             </a>
-
             <nav class="sidebar-nav" aria-label="Main menu">
-                <!-- Dashboard -->
-                <a href="../dashboard.html" class="nav-item">
-                    <i class="bx bx-grid-alt" aria-hidden="true"></i>
-                    <span>Dashboard</span>
-                </a>
-
-                <!-- Point-of-sales-->
-                <a href="../funnel/pos.html" class="nav-item">
-                    <i class="bx bx-cart" aria-hidden="true"></i>
-                    <span>Point of Sales</span>
-                </a>
-
-                <!-- Products -->
-                <a href="../funnel/product.html" class="nav-item">
-                    <i class="bx bx-package" aria-hidden="true"></i>
-                    <span>Product</span>
-                </a>
-
-                <!-- Debts -->
-                <a href="#debts" class="nav-item active">
-                    <i class="bx bx-credit-card" aria-hidden="true"></i>
-                    <span>Debts</span>
-                </a>
-
-                <!-- New Sales -->
-                <a href="../funnel/sales.html" class="nav-item">
-                    <i class="bx bx-plus-circle" aria-hidden="true"></i>
-                    <span>New Sales</span>
-                </a>
-
-                <!-- History -->
-                <a href="#history" class="nav-item">
-                    <i class="bx bx-history" aria-hidden="true"></i>
-                    <span>History</span>
-                </a>
-
-                <!-- Pos-Setting -->
-                <a href="#settings" class="nav-item">
-                    <i class="bx bx-cog" aria-hidden="true"></i>
-                    <span>Settings</span>
-                </a>
+                <a href="../dashboard.html" class="nav-item"><i class="bx bx-grid-alt"></i><span>Dashboard</span></a>
+                <a href="pos.html" class="nav-item"><i class="bx bx-cart"></i><span>Point of Sales</span></a>
+                <a href="product.html" class="nav-item"><i class="bx bx-package"></i><span>Product</span></a>
+                <a href="debts.html" class="nav-item active"><i class="bx bx-credit-card"></i><span>Debts</span></a>
+                <a href="sales.html" class="nav-item"><i class="bx bx-bar-chart-alt-2"></i><span>Sales</span></a>
+                <a href="../history.html" class="nav-item"><i class="bx bx-history"></i><span>History</span></a>
+                <a href="../settings.html" class="nav-item"><i class="bx bx-cog"></i><span>Settings</span></a>
             </nav>
         </aside>
-
-        <!-- Main Debts Dashboard -->
         <div class="main-dashboard">
             <header class="top-navbar">
                 <h1>Debts</h1>
-                <a class="new-sale-btn" href="../funnel/sales.html">
-                    <i class="bx bx-cart" aria-hidden="true"></i>
-                    <span>New Sales</span>
-                </a>
+                <a class="new-sale-btn" href="pos.html"><i class="bx bx-cart"></i><span>New Sale</span></a>
             </header>
+            <main class="debts-content">
+                <section class="debts-catalog" aria-label="Customer debts">
+                    <div class="debts-toolbar">
+                        <input id="debts-search" type="search" placeholder="Search customer or debt ID">
+                        <select id="debts-status-filter" aria-label="Filter debts by status">
+                            <option value="all">All statuses</option>
+                            <option value="Unpaid">Unpaid</option>
+                            <option value="Partial">Partial</option>
+                            <option value="Paid">Paid</option>
+                        </select>
+                    </div>
+                    <div class="debts-table-wrap">
+                        <table class="debts-table">
+                            <thead><tr>
+                                <th>Customer</th><th>Last update</th><th>Items</th>
+                                <th>Total</th><th>Payment</th><th>Balance</th>
+                                <th>Status</th><th>Actions</th>
+                            </tr></thead>
+                            <tbody id="debts-table-body"><tr><td colspan="8">Loading debts…</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+                <p id="debts-message" role="status" aria-live="polite"></p>
+
+                <dialog class="pos-dialog" id="debt-details-dialog" aria-labelledby="debt-details-title">
+                    <div class="debt-dialog-heading">
+                        <div><h2 id="debt-details-title">Debt details</h2><p id="debt-details-customer"></p></div>
+                        <button type="button" class="debt-close" data-close-dialog="debt-details-dialog" aria-label="Close">×</button>
+                    </div>
+                    <div id="debt-details-content"></div>
+                    <div class="debt-dialog-actions">
+                        <button type="button" data-close-dialog="debt-details-dialog">Close</button>
+                        <button type="button" id="debt-print-button">Print</button>
+                    </div>
+                </dialog>
+
+                <dialog class="pos-dialog" id="debt-payment-dialog" aria-labelledby="debt-payment-title">
+                    <form id="debt-payment-form">
+                        <div class="debt-dialog-heading">
+                            <h2 id="debt-payment-title">Record payment</h2>
+                            <button type="button" class="debt-close" data-close-dialog="debt-payment-dialog" aria-label="Close">×</button>
+                        </div>
+                        <p id="debt-payment-balance"></p>
+                        <label class="debt-payment-field">Amount received
+                            <input id="debt-payment-amount" type="number" min="0.01" step="0.01" required>
+                        </label>
+                        <p id="debt-payment-error" role="alert" hidden></p>
+                        <div class="debt-dialog-actions">
+                            <button type="button" data-close-dialog="debt-payment-dialog">Cancel</button>
+                            <button type="submit"><i class="bx bx-check" aria-hidden="true"></i> Save payment</button>
+                        </div>
+                    </form>
+                </dialog>
+            </main>
         </div>
     </div>
-
     <script src="../../js/main-system.js"></script>
 </body>
 </html>

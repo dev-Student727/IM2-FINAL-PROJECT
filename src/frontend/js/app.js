@@ -1,6 +1,31 @@
+const WELCOME_API_HOST = window.location.hostname || '127.0.0.1';
+const WELCOME_API_BASE = `http://${WELCOME_API_HOST}:5000/api`;
+const FRONTEND_ROOT_URL = new URL('../', document.currentScript.src);
+const LOGIN_PAGE_URL = new URL('pages/login.html', FRONTEND_ROOT_URL);
+const SIGNUP_PAGE_URL = new URL('pages/signup.html', FRONTEND_ROOT_URL);
+
+async function checkDatabaseForAccount() {
+    let response;
+    try {
+        response = await fetch(`${WELCOME_API_BASE}/auth/account-exists`, {
+            credentials: 'include'
+        });
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error(
+                `Cannot reach Flask at ${WELCOME_API_BASE}. Start the backend and verify the XAMPP database settings.`
+            );
+        }
+        throw error;
+    }
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        throw new Error(result.error || `Account check failed (${response.status}).`);
+    }
+    return result.exists;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    // UI-only placeholder while the backend and database integration are reset.
-    const mockDatabaseHasAccount = false;
 
     const loginBtn = document.getElementById('login-btn');
     const modalOverlay = document.getElementById('custom-modal');
@@ -29,16 +54,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (loginBtn && modalOverlay && modalMsgText && modalBtnContainer) {
-        loginBtn.addEventListener('click', function(event) {
+        loginBtn.addEventListener('click', async function(event) {
             event.preventDefault();
+            if (loginBtn.disabled) return;
+            loginBtn.disabled = true;
+            showCustomModal('Checking the XAMPP database for an account…', []);
 
-            if (mockDatabaseHasAccount) {
+            let hasAccount;
+            try {
+                hasAccount = await checkDatabaseForAccount();
+            } catch (error) {
+                showCustomModal(error.message, [
+                    {
+                        text: 'Retry',
+                        primary: true,
+                        callback: () => loginBtn.click()
+                    },
+                    {
+                        text: 'Close',
+                        primary: false
+                    }
+                ]);
+                loginBtn.disabled = false;
+                return;
+            }
+            loginBtn.disabled = false;
+
+            if (hasAccount) {
                 showCustomModal('You already have an account.', [
                     {
                         text: 'OK',
                         primary: true,
                         callback: function() {
-                            window.location.href = 'pages/login.html';
+                            window.location.href = LOGIN_PAGE_URL.href;
                         }
                     }
                 ]);
@@ -55,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 text: 'Yes',
                                 primary: true,
                                 callback: function() {
-                                    window.location.href = 'pages/signup.html';
+                                    window.location.href = SIGNUP_PAGE_URL.href;
                                 }
                             },
                             {
@@ -67,14 +115,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                             text: 'Yes',
                                             primary: true,
                                             callback: function() {
-                                                window.location.href = window.location.pathname;
+                                                window.location.href = FRONTEND_ROOT_URL.href;
                                             }
                                         },
                                         {
                                             text: 'No',
                                             primary: false,
                                             callback: function() {
-                                                window.location.href = 'pages/signup.html';
+                                                window.location.href = SIGNUP_PAGE_URL.href;
                                             }
                                         }
                                     ]);

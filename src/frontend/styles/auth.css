@@ -192,6 +192,25 @@
     font-size: 14px;
 }
 
+.remember-forgot label {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.remember-forgot a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.remember-hint {
+    min-height: 1.25em;
+    margin: -30px 0 16px;
+    color: #ffffff;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
 .remember-forgot label input {
     accent-color: var(--bg-white-40);
     margin-right: 5px;
@@ -229,4 +248,24 @@
     color: #ffffff;
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-} 
+}
+
+@media (max-width: 540px) {
+    .login-container {
+        width: min(500px, calc(100vw - 32px));
+        max-height: calc(100dvh - 32px);
+        padding: 20px 16px;
+        overflow-y: auto;
+    }
+
+    .login-container h1 {
+        font-size: clamp(26px, 8vw, 36px);
+    }
+
+    .login-container .remember-forgot {
+        flex-wrap: nowrap;
+        gap: 8px;
+        margin-bottom: 26px;
+        font-size: 12px;
+    }
+}

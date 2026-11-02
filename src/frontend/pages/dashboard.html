@@ -28,37 +28,37 @@
                 </a>
 
                 <!-- Point-of-sales-->
-                <a href="../pages/funnel/pos.html" class="nav-item">
+                <a href="funnel/pos.html" class="nav-item">
                     <i class="bx bx-cart" aria-hidden="true"></i>
                     <span>Point of Sales</span>
                 </a>
 
                 <!-- Products -->
-                <a href="../pages/funnel/product.html" class="nav-item">
+                <a href="funnel/product.html" class="nav-item">
                     <i class="bx bx-package" aria-hidden="true"></i>
                     <span>Product</span>
                 </a>
 
                 <!-- Debts -->
-                <a href="../pages/funnel/debts.html" class="nav-item">
+                <a href="funnel/debts.html" class="nav-item">
                     <i class="bx bx-credit-card" aria-hidden="true"></i>
                     <span>Debts</span>
                 </a>
 
                 <!-- New Sales -->
-                <a href="#sales" class="nav-item">
-                    <i class="bx bx-plus-circle" aria-hidden="true"></i>
-                    <span>New Sales</span>
+                <a href="funnel/sales.html" class="nav-item">
+                    <i class="bx bx-bar-chart-alt-2" aria-hidden="true"></i>
+                    <span>Sales</span>
                 </a>
 
                 <!-- History -->
-                <a href="#history" class="nav-item">
+                <a href="history.html" class="nav-item">
                     <i class="bx bx-history" aria-hidden="true"></i>
                     <span>History</span>
                 </a>
 
                 <!-- Pos-Setting -->
-                <a href="#settings" class="nav-item">
+                <a href="settings.html" class="nav-item">
                     <i class="bx bx-cog" aria-hidden="true"></i>
                     <span>Settings</span>
                 </a>
@@ -69,7 +69,7 @@
         <div class="main-dashboard">
             <header class="top-navbar">
                 <h1>Dashboard</h1>
-                <a class="new-sale-btn" href="../pages/funnel/sales.html">
+                <a class="new-sale-btn" href="funnel/pos.html">
                     <i class="bx bx-cart" aria-hidden="true"></i>
                     <span>New Sales</span>
                 </a>
@@ -82,7 +82,7 @@
                     <article class="summary-card">
                         <div>
                             <p>Sales Today</p>
-                            <strong>₱0.00</strong>
+                            <strong id="dashboard-sales-today">₱0.00</strong>
                         </div>
                         <span class="summary-icon sales-icon">
                             <i class="bx bx-trending-up" aria-hidden="true"></i>
@@ -93,7 +93,7 @@
                     <article class="summary-card">
                         <div>
                             <p>Transactions Today</p>
-                            <strong>₱0.00</strong>
+                            <strong id="dashboard-transactions-today">0</strong>
                         </div>
                         <span class="summary-icon transaction-icon">
                             <i class="bx bx-receipt" aria-hidden="true"></i>
@@ -104,7 +104,7 @@
                     <article class="summary-card">
                         <div>
                             <p>Outstanding Debts</p>
-                            <strong>₱0.00</strong>
+                            <strong id="dashboard-outstanding-debts">₱0.00</strong>
                         </div>
                         <span class="summary-icon debt-icon">
                             <i class="bx bx-credit-card" aria-hidden="true"></i>
@@ -115,7 +115,7 @@
                     <article class="summary-card">
                         <div>
                             <p>Low Stock Items</p>
-                            <strong>0</strong>
+                            <strong id="dashboard-low-stock-count">0</strong>
                         </div>
                         <span class="summary-icon stock-icon">
                             <i class="bx bx-error" aria-hidden="true"></i>
@@ -127,17 +127,19 @@
                     <article class="panel">
                         <div class="panel-heading">
                             <h2>Recent Transactions</h2>
-                            <span class="panel-badge">0 Total</span>
+                            <span class="panel-badge" id="dashboard-transactions-count">0 Total</span>
                         </div>
-                        <p class="empty-message">No transactions yet.</p>
+                        <p class="empty-message" id="dashboard-transactions-empty">No transactions yet.</p>
+                        <div id="dashboard-recent-transactions" aria-live="polite"></div>
                     </article>
 
                     <article class="panel">
                         <div class="panel-heading">
                             <h2>Low stock alerts</h2>
-                            <span class="panel-badge">0 items</span>
+                            <span class="panel-badge" id="dashboard-low-stock-badge">0 items</span>
                         </div>
-                        <p class="empty-message">All Products are well stocked</p>
+                        <p class="empty-message" id="dashboard-low-stock-empty">All Products are well stocked</p>
+                        <div id="dashboard-low-stock"></div>
                     </article>
                 </section>
             </main>

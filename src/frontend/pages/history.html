@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/font.css">
+    <link rel="stylesheet" href="../styles/main-system.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <title>MRB-POS | History</title>
+</head>
+<body>
+    <div class="history-wrapper">
+        <aside class="sidebar">
+            <a href="dashboard.html" class="brand"><span class="brand-mark">M</span><span class="brand-copy"><strong>MRB-POS</strong><small>POS &amp; Inventory</small></span></a>
+            <nav class="sidebar-nav" aria-label="Main menu">
+                <a href="dashboard.html" class="nav-item"><i class="bx bx-grid-alt"></i><span>Dashboard</span></a>
+                <a href="funnel/pos.html" class="nav-item"><i class="bx bx-cart"></i><span>Point of Sales</span></a>
+                <a href="funnel/product.html" class="nav-item"><i class="bx bx-package"></i><span>Product</span></a>
+                <a href="funnel/debts.html" class="nav-item"><i class="bx bx-credit-card"></i><span>Debts</span></a>
+                <a href="funnel/sales.html" class="nav-item"><i class="bx bx-bar-chart-alt-2"></i><span>Sales</span></a>
+                <a href="history.html" class="nav-item active"><i class="bx bx-history"></i><span>History</span></a>
+                <a href="settings.html" class="nav-item"><i class="bx bx-cog"></i><span>Settings</span></a>
+            </nav>
+        </aside>
+        <div class="main-dashboard">
+            <header class="top-navbar"><h1>Transaction history</h1><a class="new-sale-btn" href="funnel/pos.html"><i class="bx bx-cart"></i><span>New Sale</span></a></header>
+            <main class="report-content">
+                <section class="report-toolbar" aria-label="History filters">
+                    <input id="history-search" type="search" placeholder="Search receipt, customer, or item">
+                    <input id="history-date" type="date" aria-label="Filter by date">
+                    <select id="history-status" aria-label="Filter by payment status">
+                        <option value="">All statuses</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Partial">Partial</option>
+                        <option value="Unpaid">Unpaid</option>
+                    </select>
+                </section>
+                <p id="history-message" role="status" aria-live="polite"></p>
+                <section class="report-panel">
+                    <div class="report-table-wrap"><table class="report-table">
+                        <thead><tr><th>Receipt</th><th>Date</th><th>Customer</th><th>Type</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead>
+                        <tbody id="history-transactions"><tr><td colspan="8">Loading history…</td></tr></tbody>
+                    </table></div>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script src="../js/main-system.js"></script>
+</body>
+</html>

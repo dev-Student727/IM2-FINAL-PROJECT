@@ -3,80 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../styles/font.css">
     <link rel="stylesheet" href="../../styles/main-system.css">
-    <link rel="stylesheet" href="../../styles/main-system.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <title>Point of Sales</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <title>MRB-POS | Sales</title>
 </head>
 <body>
-    <!-- New Sales Stracture-->
     <div class="sales-wrapper">
         <aside class="sidebar">
-            <a href="#" class="brand">
+            <a href="../dashboard.html" class="brand">
                 <span class="brand-mark">M</span>
-                <span class="brand-copy">
-                    <strong>MRB-POS</strong>
-                    <small>POS &amp; Inventory</small>
-                </span>
+                <span class="brand-copy"><strong>MRB-POS</strong><small>POS &amp; Inventory</small></span>
             </a>
-
             <nav class="sidebar-nav" aria-label="Main menu">
-                <!-- Dashboard -->
-                <a href="../dashboard.html" class="nav-item">
-                    <i class="bx bx-grid-alt" aria-hidden="true"></i>
-                    <span>Dashboard</span>
-                </a>
-
-                <!-- Point-of-sales-->
-                <a href="../funnel/pos.html" class="nav-item">
-                    <i class="bx bx-cart" aria-hidden="true"></i>
-                    <span>Point of Sales</span>
-                </a>
-
-                <!-- Products -->
-                <a href="../funnel/product.html" class="nav-item">
-                    <i class="bx bx-package" aria-hidden="true"></i>
-                    <span>Product</span>
-                </a>
-
-                <!-- Debts -->
-                <a href="../funnel/debts.html" class="nav-item">
-                    <i class="bx bx-credit-card" aria-hidden="true"></i>
-                    <span>Debts</span>
-                </a>
-
-                <!-- New Sales -->
-                <a href="#sales" class="nav-item active">
-                    <i class="bx bx-plus-circle" aria-hidden="true"></i>
-                    <span>New Sales</span>
-                </a>
-
-                <!-- History -->
-                <a href="#history" class="nav-item">
-                    <i class="bx bx-history" aria-hidden="true"></i>
-                    <span>History</span>
-                </a>
-
-                <!-- Pos-Setting -->
-                <a href="#settings" class="nav-item">
-                    <i class="bx bx-cog" aria-hidden="true"></i>
-                    <span>Settings</span>
-                </a>
+                <a href="../dashboard.html" class="nav-item"><i class="bx bx-grid-alt"></i><span>Dashboard</span></a>
+                <a href="pos.html" class="nav-item"><i class="bx bx-cart"></i><span>Point of Sales</span></a>
+                <a href="product.html" class="nav-item"><i class="bx bx-package"></i><span>Product</span></a>
+                <a href="debts.html" class="nav-item"><i class="bx bx-credit-card"></i><span>Debts</span></a>
+                <a href="sales.html" class="nav-item active"><i class="bx bx-bar-chart-alt-2"></i><span>Sales</span></a>
+                <a href="../history.html" class="nav-item"><i class="bx bx-history"></i><span>History</span></a>
+                <a href="../settings.html" class="nav-item"><i class="bx bx-cog"></i><span>Settings</span></a>
             </nav>
         </aside>
-
-        <!-- Main Product Dashboard -->
         <div class="main-dashboard">
             <header class="top-navbar">
-                <h1>New Sales</h1>
-                <a class="new-sale-btn" href="#sales">
-                    <i class="bx bx-cart" aria-hidden="true"></i>
-                    <span>New Sales</span>
-                </a>
+                <h1>Sales</h1>
+                <a class="new-sale-btn" href="pos.html"><i class="bx bx-cart"></i><span>New Sale</span></a>
             </header>
+            <main class="report-content">
+                <section class="report-toolbar" aria-label="Sales report filters">
+                    <input id="sales-search" type="search" placeholder="Search receipt, customer, or item">
+                    <select id="sales-period" aria-label="Sales reporting period">
+                        <option value="today">Today</option>
+                        <option value="7days">Last 7 days</option>
+                        <option value="30days">Last 30 days</option>
+                        <option value="all">All time</option>
+                    </select>
+                </section>
+                <p id="sales-message" role="status" aria-live="polite"></p>
+                <section class="report-summary-grid" aria-label="Sales totals">
+                    <article class="summary-card"><div><p>Gross sales</p><strong id="sales-gross-sales">₱0.00</strong></div></article>
+                    <article class="summary-card"><div><p>Collected</p><strong id="sales-cash-collected">₱0.00</strong></div></article>
+                    <article class="summary-card"><div><p>Receivables</p><strong id="sales-receivables">₱0.00</strong></div></article>
+                    <article class="summary-card"><div><p>Average sale</p><strong id="sales-average">₱0.00</strong></div></article>
+                </section>
+                <section class="report-panel">
+                    <div class="panel-heading"><h2>Best sellers</h2></div>
+                    <div class="report-table-wrap"><table class="report-table">
+                        <thead><tr><th>Product</th><th>Units sold</th><th>Gross sales</th></tr></thead>
+                        <tbody id="sales-best-sellers"><tr><td colspan="3">Loading…</td></tr></tbody>
+                    </table></div>
+                </section>
+                <section class="report-panel">
+                    <div class="panel-heading"><h2>Transactions</h2></div>
+                    <div class="report-table-wrap"><table class="report-table">
+                        <thead><tr><th>Receipt</th><th>Date</th><th>Customer</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead>
+                        <tbody id="sales-transactions"><tr><td colspan="7">Loading…</td></tr></tbody>
+                    </table></div>
+                </section>
+            </main>
         </div>
     </div>
-
     <script src="../../js/main-system.js"></script>
 </body>
 </html>

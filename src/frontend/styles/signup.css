@@ -478,6 +478,24 @@
     animation: modal-check-pop 0.35s ease-out;
 }
 
+@media (max-width: 540px) {
+    .container,
+    .card {
+        padding: 20px 16px;
+    }
+
+    .container h1,
+    .header h1 {
+        font-size: clamp(25px, 8vw, 34px);
+    }
+
+    .form-action {
+        right: 16px;
+        bottom: 16px;
+        left: 16px;
+    }
+}
+
 
 @keyframes modal-spin {
     to {transform: rotate(360deg);}

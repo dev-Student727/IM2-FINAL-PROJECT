@@ -17,25 +17,28 @@
     <div class="bg-overlay"></div>
 
     <div class="login-container">
-        <form action="">
+        <form action="" autocomplete="off">
             <h1>LOGIN POS</h1>
 
             <!-- Input Types -->
             <div class="input-group">
-                <input type="text" id="user-id" placeholder="User ID" required>
+                <input type="text" id="user-id" name="user_id" placeholder="User ID" list="account-user-ids" autocomplete="off" required>
+                <datalist id="account-user-ids"></datalist>
                 <i class='bx bxs-user'></i>
             </div>
             <div class="input-group">
-                <input type="password" id="password" placeholder="Password" required>
+                <input type="password" id="password" name="password" placeholder="Password" autocomplete="off" required>
                 <i class='bx bxs-lock-alt' ></i>
             </div>
             
             <div class="remember-forgot">
                 <label>
-                    <input type="checkbox" id="remember-me"> Remember Me
+                    <input type="checkbox" id="remember-me"> Remember me
                 </label>
                 <a href="#" id="forgot-password">Forgot Password?</a>
             </div>
+            <p class="remember-hint" id="login-status" aria-live="polite"></p>
+            <p class="remember-hint" id="remember-hint" aria-live="polite"></p>
 
             <button type="submit" class="btn" id="login-btn">Login</button>
         </form>
