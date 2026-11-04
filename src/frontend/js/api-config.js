@@ -10,5 +10,5 @@
 
     window.MRB_API_BASE_URL = isLocalHost
         ? `http://${hostname}:5000/api`
-        : 'https://point-of-system.onrender.com/api';
+        : 'https://point-of-sales-beta.onrender.com/api';
 })();
