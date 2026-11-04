@@ -154,7 +154,7 @@ body, html {
     width: 100vw;
     height: 100vh;
     /* background Image */
-    background-image: url('/src/assets/bg-image-1.png');
+    background-image: url('../assets/bg-image-1.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
