@@ -53,30 +53,28 @@ run `src\backend\start-local.ps1` manually from PowerShell. The API listens on
 `http://127.0.0.1:5000/api/health` for the process status. Database-backed
 requests also require the migration and a reachable XAMPP database.
 
-## Deploying the Flask backend to Vercel
+## Deploying the frontend to Vercel and backend to Render
 
-1. In Vercel Project Settings → General, set **Root Directory** to
-   `src/backend`. This folder contains `app.py` (the Flask instance is named
-   `app`) and `requirements.txt`; Vercel detects the Flask application.
-2. In Project Settings → Environment Variables, configure:
-   - `FLASK_SECRET_KEY`: a persistent random secret. Generate one locally with
-     `py -c "import secrets; print(secrets.token_urlsafe(48))"`. Keep it private
-     and unchanged between deployments.
+1. In Vercel, set **Root Directory** to `src/frontend` and the framework
+   preset to **Other**. The frontend is static HTML/CSS/JavaScript and needs no
+   Vercel environment variables. `src/frontend/js/api-config.js` routes local
+   development to Flask on port 5000 and deployed sites to the Render API.
+2. In Render's backend service environment, set:
+   - `FLASK_SECRET_KEY`: a persistent random secret. Generate it locally with
+     `py -c "import secrets; print(secrets.token_urlsafe(48))"` and keep it
+     private and unchanged across deployments.
    - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`: credentials
-     and host for a hosted MySQL-compatible database.
-   - `CORS_ALLOWED_ORIGINS`: your deployed frontend origin, such as
-     `https://your-frontend.vercel.app` (no path or trailing slash). For more
-     than one origin, separate them with commas.
-3. Use a managed database reachable from Vercel. XAMPP at `127.0.0.1` is on
-   your computer and cannot be reached by a deployed function. Back up the
-   hosted database and apply `src/database/pos_feature_migration.sql` to it.
-4. Redeploy after setting the variables. Open `/` for the API service response
-   or `/api/health` for the health check. These routes confirm the function
-   runs; database-backed APIs also require valid database settings and schema.
-
-Vercel enables secure cross-site session cookies by default. Keep the frontend
-and backend on HTTPS, and do not put database credentials or `FLASK_SECRET_KEY`
-in frontend variables or GitHub.
+     for a hosted MySQL-compatible database. Local XAMPP at `127.0.0.1` is not
+     reachable by Render.
+   - `CORS_ALLOWED_ORIGINS`: the exact Vercel site origin, with no path or
+     trailing slash. Add production/custom domains as comma-separated origins.
+   - `SESSION_COOKIE_SAMESITE=None` and `SESSION_COOKIE_SECURE=true` so browser
+     login sessions can be sent from the Vercel site to the Render API.
+3. Back up the hosted database and apply `src/database/pos_feature_migration.sql`
+   to it. Never put database credentials or `FLASK_SECRET_KEY` in Vercel's
+   frontend variables or in GitHub.
+4. Verify the backend at `/api/health`, then redeploy the Vercel frontend after
+   committing and pushing frontend changes.
 
 ## Run the frontend
 

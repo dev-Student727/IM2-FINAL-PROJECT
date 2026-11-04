@@ -1,5 +1,4 @@
-const WELCOME_API_HOST = window.location.hostname || '127.0.0.1';
-const WELCOME_API_BASE = `http://${WELCOME_API_HOST}:5000/api`;
+const WELCOME_API_BASE = window.MRB_API_BASE_URL;
 const FRONTEND_ROOT_URL = new URL('../', document.currentScript.src);
 const LOGIN_PAGE_URL = new URL('pages/login.html', FRONTEND_ROOT_URL);
 const SIGNUP_PAGE_URL = new URL('pages/signup.html', FRONTEND_ROOT_URL);
@@ -20,9 +19,8 @@ async function fetchWelcomeApi(path, options) {
     }
 
     throw new Error(
-        `Cannot reach Flask at ${WELCOME_API_BASE}. XAMPP starts MySQL, but Flask must also be running. ` +
-        `In VS Code, press Ctrl+Shift+P, choose "Tasks: Run Task", then "Start MRB-POS backend (wait for XAMPP)". ` +
-        `Allow automatic tasks when prompted to start Flask whenever this workspace opens.`,
+        `Cannot reach the backend API at ${WELCOME_API_BASE}. Verify that the Render service is available and ` +
+        `that its CORS_ALLOWED_ORIGINS setting includes this Vercel site's exact URL.`,
         { cause: lastNetworkError }
     );
 }
