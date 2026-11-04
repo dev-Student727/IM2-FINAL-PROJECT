@@ -230,9 +230,33 @@ def valid_account_password(password):
 
 @app.get("/api/health")
 def health_check():
-    return jsonify({"status": "ok", "database_configured": bool(
-        os.getenv("DB_USER") and os.getenv("DB_NAME")
-    )})
+    database_configured = bool(os.getenv("DB_USER") and os.getenv("DB_NAME"))
+    connection = None
+    try:
+        connection = connect_to_database()
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT user_id FROM `user` LIMIT 0")
+        return jsonify({
+            "status": "ok",
+            "database_configured": database_configured,
+            "database_connected": True,
+            "account_table_available": True,
+        })
+    except (pymysql.MySQLError, RuntimeError, ValueError):
+        app.logger.exception("Database health check failed")
+        return jsonify({
+            "status": "error",
+            "database_configured": database_configured,
+            "database_connected": False,
+            "account_table_available": False,
+            "message": (
+                "Could not connect to the configured MySQL database or find its `user` table. "
+                "Check the backend environment variables and service logs."
+            ),
+        }), 503
+    finally:
+        if connection:
+            connection.close()
 
 
 @app.get("/")
@@ -259,8 +283,8 @@ def account_exists():
     except (pymysql.MySQLError, RuntimeError, ValueError):
         app.logger.exception("Could not check whether an account exists")
         return json_error(
-            "Could not check accounts. Confirm Flask is running, database settings are set, "
-            "and the XAMPP `pos` database is available.",
+            "Could not check accounts. Verify the configured MySQL connection and that the "
+            "`user` table exists; see the backend service logs.",
             503,
         )
     finally:
@@ -283,7 +307,8 @@ def login_user_ids():
     except (pymysql.MySQLError, RuntimeError, ValueError):
         app.logger.exception("Could not retrieve account IDs for login")
         return json_error(
-            "Could not load account IDs. Confirm the Flask and XAMPP database settings.",
+            "Could not load account IDs. Verify the configured MySQL connection and that the "
+            "`user` table exists; see the backend service logs.",
             503,
         )
     finally:
