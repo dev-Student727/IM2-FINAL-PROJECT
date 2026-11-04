@@ -31,7 +31,8 @@ async function checkDatabaseForAccount() {
     });
     const result = await response.json().catch(() => ({}));
     if (!response.ok) {
-        throw new Error(result.error || `Account check failed (${response.status}).`);
+        const message = result.error || `Account check failed (${response.status}).`;
+        throw new Error(result.diagnostic ? `${message} ${result.diagnostic}` : message);
     }
     return result.exists;
 }
