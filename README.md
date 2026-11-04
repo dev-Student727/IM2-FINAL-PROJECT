@@ -34,23 +34,22 @@ Use Python 3.10 or later. Install the backend packages from the repository root:
 py -3.10 -m pip install -r src\backend\requirements.txt
 ```
 
-Set the connection settings in the same PowerShell window where Flask is
-started. Replace the user/password values with the credentials for your local
-XAMPP installation. Flask creates a local, ignored secret-key file on its first
-start if `FLASK_SECRET_KEY` is not set; that stable key keeps remembered sessions
-valid across backend restarts. If you set `FLASK_SECRET_KEY` yourself, reuse the
-same value each time you start Flask.
+The local `src/backend/.env` file contains the XAMPP connection settings and is
+ignored by Git. Update it if your MySQL user, password, database, or port differs.
+Flask creates a local, ignored secret-key file on its first start if
+`FLASK_SECRET_KEY` is not set; that stable key keeps remembered sessions valid
+across backend restarts. If you set `FLASK_SECRET_KEY` yourself, reuse the same
+value each time you start Flask.
 
 ```powershell
-$env:DB_HOST = "127.0.0.1"
-$env:DB_PORT = "3306"
-$env:DB_USER = "root"
-$env:DB_PASSWORD = ""
-$env:DB_NAME = "pos"
 py -3.10 src\backend\app.py
 ```
 
-The API listens on `http://127.0.0.1:5000`. Check
+The VS Code workspace task starts the backend automatically when the project
+opens. It waits for XAMPP MariaDB, verifies the database connection, then starts
+Flask. Approve automatic tasks when VS Code prompts the first time. You can also
+run `src\backend\start-local.ps1` manually from PowerShell. The API listens on
+`http://127.0.0.1:5000`. Check
 `http://127.0.0.1:5000/api/health` for the process status. Database-backed
 requests also require the migration and a reachable XAMPP database.
 

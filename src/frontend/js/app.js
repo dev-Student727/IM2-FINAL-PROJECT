@@ -4,20 +4,33 @@ const FRONTEND_ROOT_URL = new URL('../', document.currentScript.src);
 const LOGIN_PAGE_URL = new URL('pages/login.html', FRONTEND_ROOT_URL);
 const SIGNUP_PAGE_URL = new URL('pages/signup.html', FRONTEND_ROOT_URL);
 
-async function checkDatabaseForAccount() {
-    let response;
-    try {
-        response = await fetch(`${WELCOME_API_BASE}/auth/account-exists`, {
-            credentials: 'include'
-        });
-    } catch (error) {
-        if (error instanceof TypeError) {
-            throw new Error(
-                `Cannot reach Flask at ${WELCOME_API_BASE}. Start the backend and verify the XAMPP database settings.`
-            );
+async function fetchWelcomeApi(path, options) {
+    let lastNetworkError;
+
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+        try {
+            return await fetch(`${WELCOME_API_BASE}${path}`, options);
+        } catch (error) {
+            if (!(error instanceof TypeError)) throw error;
+            lastNetworkError = error;
+            if (attempt < 9) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
         }
-        throw error;
     }
+
+    throw new Error(
+        `Cannot reach Flask at ${WELCOME_API_BASE}. XAMPP starts MySQL, but Flask must also be running. ` +
+        `In VS Code, press Ctrl+Shift+P, choose "Tasks: Run Task", then "Start MRB-POS backend (wait for XAMPP)". ` +
+        `Allow automatic tasks when prompted to start Flask whenever this workspace opens.`,
+        { cause: lastNetworkError }
+    );
+}
+
+async function checkDatabaseForAccount() {
+    const response = await fetchWelcomeApi('/auth/account-exists', {
+        credentials: 'include'
+    });
     const result = await response.json().catch(() => ({}));
     if (!response.ok) {
         throw new Error(result.error || `Account check failed (${response.status}).`);

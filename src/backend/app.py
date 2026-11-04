@@ -6,8 +6,12 @@ from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from urllib.parse import urlsplit
 
 import pymysql
+from dotenv import load_dotenv
 from flask import Flask, jsonify, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
+
+
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 
 def load_secret_key():
