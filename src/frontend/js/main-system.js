@@ -1,4 +1,5 @@
-const API_BASE_URL = window.MRB_API_BASE_URL;
+const API_HOST = window.location.hostname || '127.0.0.1';
+const API_BASE_URL = `http://${API_HOST}:5000/api`;
 const FRONTEND_ENTRY_URL = new URL('../index.html', document.currentScript.src);
 const LOGIN_PAGE_URL = new URL('../pages/login.html', document.currentScript.src);
 let currencySymbol = '₱';
@@ -42,7 +43,7 @@ async function apiRequest(path, options = {}) {
     } catch (error) {
         if (error instanceof TypeError) {
             throw new Error(
-                `Backend API is unreachable at ${API_BASE_URL}. Verify the Render service URL and its CORS settings.`
+                `Flask API is unreachable at ${API_BASE_URL}. Start the backend and check its database settings.`
             );
         }
         throw error;

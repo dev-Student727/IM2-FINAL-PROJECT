@@ -1,38 +1,26 @@
-const WELCOME_API_BASE = window.MRB_API_BASE_URL;
+const WELCOME_API_HOST = window.location.hostname || '127.0.0.1';
+const WELCOME_API_BASE = `http://${WELCOME_API_HOST}:5000/api`;
 const FRONTEND_ROOT_URL = new URL('../', document.currentScript.src);
 const LOGIN_PAGE_URL = new URL('pages/login.html', FRONTEND_ROOT_URL);
 const SIGNUP_PAGE_URL = new URL('pages/signup.html', FRONTEND_ROOT_URL);
 
-async function fetchWelcomeApi(path, options) {
-    let lastNetworkError;
-
-    for (let attempt = 0; attempt < 10; attempt += 1) {
-        try {
-            return await fetch(`${WELCOME_API_BASE}${path}`, options);
-        } catch (error) {
-            if (!(error instanceof TypeError)) throw error;
-            lastNetworkError = error;
-            if (attempt < 9) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-            }
-        }
-    }
-
-    throw new Error(
-        `Cannot reach the backend API at ${WELCOME_API_BASE}. Verify that the Render service is available and ` +
-        `that its CORS_ALLOWED_ORIGINS setting includes this Vercel site's exact URL.`,
-        { cause: lastNetworkError }
-    );
-}
-
 async function checkDatabaseForAccount() {
-    const response = await fetchWelcomeApi('/auth/account-exists', {
-        credentials: 'include'
-    });
+    let response;
+    try {
+        response = await fetch(`${WELCOME_API_BASE}/auth/account-exists`, {
+            credentials: 'include'
+        });
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error(
+                `Cannot reach Flask at ${WELCOME_API_BASE}. Start the backend and verify the XAMPP database settings.`
+            );
+        }
+        throw error;
+    }
     const result = await response.json().catch(() => ({}));
     if (!response.ok) {
-        const message = result.error || `Account check failed (${response.status}).`;
-        throw new Error(result.diagnostic ? `${message} ${result.diagnostic}` : message);
+        throw new Error(result.error || `Account check failed (${response.status}).`);
     }
     return result.exists;
 }

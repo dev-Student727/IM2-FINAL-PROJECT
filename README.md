@@ -34,47 +34,50 @@ Use Python 3.10 or later. Install the backend packages from the repository root:
 py -3.10 -m pip install -r src\backend\requirements.txt
 ```
 
-The local `src/backend/.env` file contains the XAMPP connection settings and is
-ignored by Git. Update it if your MySQL user, password, database, or port differs.
-Flask creates a local, ignored secret-key file on its first start if
-`FLASK_SECRET_KEY` is not set; that stable key keeps remembered sessions valid
-across backend restarts. If you set `FLASK_SECRET_KEY` yourself, reuse the same
-value each time you start Flask.
+Set the connection settings in the same PowerShell window where Flask is
+started. Replace the user/password values with the credentials for your local
+XAMPP installation. Flask creates a local, ignored secret-key file on its first
+start if `FLASK_SECRET_KEY` is not set; that stable key keeps remembered sessions
+valid across backend restarts. If you set `FLASK_SECRET_KEY` yourself, reuse the
+same value each time you start Flask.
 
 ```powershell
+$env:DB_HOST = "127.0.0.1"
+$env:DB_PORT = "3306"
+$env:DB_USER = "root"
+$env:DB_PASSWORD = ""
+$env:DB_NAME = "pos"
 py -3.10 src\backend\app.py
 ```
 
-The VS Code workspace task starts the backend automatically when the project
-opens. It waits for XAMPP MariaDB, verifies the database connection, then starts
-Flask. Approve automatic tasks when VS Code prompts the first time. You can also
-run `src\backend\start-local.ps1` manually from PowerShell. The API listens on
-`http://127.0.0.1:5000`. Check
+The API listens on `http://127.0.0.1:5000`. Check
 `http://127.0.0.1:5000/api/health` for the process status. Database-backed
 requests also require the migration and a reachable XAMPP database.
 
-## Deploying the frontend to Vercel and backend to Render
+## Deploying the Flask backend to Vercel
 
-1. In Vercel, set **Root Directory** to `src/frontend` and the framework
-   preset to **Other**. The frontend is static HTML/CSS/JavaScript and needs no
-   Vercel environment variables. `src/frontend/js/api-config.js` routes local
-   development to Flask on port 5000 and deployed sites to the Render API.
-2. In Render's backend service environment, set:
-   - `FLASK_SECRET_KEY`: a persistent random secret. Generate it locally with
-     `py -c "import secrets; print(secrets.token_urlsafe(48))"` and keep it
-     private and unchanged across deployments.
+1. In Vercel Project Settings → General, set **Root Directory** to
+   `src/backend`. This folder contains `app.py` (the Flask instance is named
+   `app`) and `requirements.txt`; Vercel detects the Flask application.
+2. In Project Settings → Environment Variables, configure:
+   - `FLASK_SECRET_KEY`: a persistent random secret. Generate one locally with
+     `py -c "import secrets; print(secrets.token_urlsafe(48))"`. Keep it private
+     and unchanged between deployments.
    - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`: credentials
-     for a hosted MySQL-compatible database. Local XAMPP at `127.0.0.1` is not
-     reachable by Render.
-   - `CORS_ALLOWED_ORIGINS`: the exact Vercel site origin, with no path or
-     trailing slash. Add production/custom domains as comma-separated origins.
-   - `SESSION_COOKIE_SAMESITE=None` and `SESSION_COOKIE_SECURE=true` so browser
-     login sessions can be sent from the Vercel site to the Render API.
-3. Back up the hosted database and apply `src/database/pos_feature_migration.sql`
-   to it. Never put database credentials or `FLASK_SECRET_KEY` in Vercel's
-   frontend variables or in GitHub.
-4. Verify the backend at `/api/health`, then redeploy the Vercel frontend after
-   committing and pushing frontend changes.
+     and host for a hosted MySQL-compatible database.
+   - `CORS_ALLOWED_ORIGINS`: your deployed frontend origin, such as
+     `https://your-frontend.vercel.app` (no path or trailing slash). For more
+     than one origin, separate them with commas.
+3. Use a managed database reachable from Vercel. XAMPP at `127.0.0.1` is on
+   your computer and cannot be reached by a deployed function. Back up the
+   hosted database and apply `src/database/pos_feature_migration.sql` to it.
+4. Redeploy after setting the variables. Open `/` for the API service response
+   or `/api/health` for the health check. These routes confirm the function
+   runs; database-backed APIs also require valid database settings and schema.
+
+Vercel enables secure cross-site session cookies by default. Keep the frontend
+and backend on HTTPS, and do not put database credentials or `FLASK_SECRET_KEY`
+in frontend variables or GitHub.
 
 ## Run the frontend
 

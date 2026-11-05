@@ -1,4 +1,5 @@
-const AUTH_API_BASE = window.MRB_API_BASE_URL;
+const AUTH_API_HOST = window.location.hostname || '127.0.0.1';
+const AUTH_API_BASE = `http://${AUTH_API_HOST}:5000/api`;
 const FRONTEND_ROOT_URL = new URL('../', document.currentScript.src);
 const SIGNUP_STEP_URL = new URL('pages/funnel/signup2.html', FRONTEND_ROOT_URL);
 const SIGNUP_PAGE_URL = new URL('pages/signup.html', FRONTEND_ROOT_URL);
@@ -19,7 +20,7 @@ async function authApiRequest(path, options = {}) {
     } catch (error) {
         if (error instanceof TypeError) {
             throw new Error(
-                `Backend API is unreachable at ${AUTH_API_BASE}. Verify the Render service URL and its CORS settings.`
+                `Flask API is unreachable at ${AUTH_API_BASE}. Start the backend and check the XAMPP connection.`
             );
         }
         throw error;

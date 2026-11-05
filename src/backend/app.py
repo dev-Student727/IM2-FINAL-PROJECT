@@ -6,12 +6,8 @@ from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from urllib.parse import urlsplit
 
 import pymysql
-from dotenv import load_dotenv
 from flask import Flask, jsonify, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
-
-
-load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 
 def load_secret_key():
@@ -132,54 +128,6 @@ def connect_to_database():
     )
 
 
-def database_diagnostic(error):
-    if isinstance(error, RuntimeError):
-        return "database_configuration", str(error)
-    if isinstance(error, ValueError):
-        return (
-            "invalid_database_configuration",
-            "DB_PORT must be a valid TCP port number.",
-        )
-
-    error_code = error.args[0] if error.args else None
-    diagnostics = {
-        1045: (
-            "mysql_access_denied",
-            "MySQL rejected DB_USER or DB_PASSWORD, or that user lacks permission "
-            "to connect from the backend host.",
-        ),
-        1049: (
-            "mysql_database_not_found",
-            "MySQL could not find DB_NAME. Check the configured database name.",
-        ),
-        1146: (
-            "mysql_table_not_found",
-            "The required table is missing. Import the project schema into DB_NAME "
-            "and confirm the `user` table exists.",
-        ),
-        2002: (
-            "mysql_connection_failed",
-            "The backend could not connect to MySQL. Check DB_HOST, DB_PORT, and "
-            "whether the database accepts connections from this backend.",
-        ),
-        2003: (
-            "mysql_host_unreachable",
-            "MySQL host or port is unreachable. DB_HOST must be reachable from the "
-            "backend; on Render, 127.0.0.1 refers to Render itself, not your PC.",
-        ),
-        2005: (
-            "mysql_host_not_found",
-            "DB_HOST could not be resolved. Check the database provider's hostname.",
-        ),
-    }
-    if isinstance(error_code, int):
-        return diagnostics.get(
-            error_code,
-            (f"mysql_error_{error_code}", f"MySQL returned error code {error_code}. Check backend logs."),
-        )
-    return "mysql_connection_failed", "The MySQL connection failed. Check backend logs."
-
-
 def money(value):
     try:
         amount = Decimal(str(value)).quantize(CENT, rounding=ROUND_HALF_UP)
@@ -278,44 +226,9 @@ def valid_account_password(password):
 
 @app.get("/api/health")
 def health_check():
-    database_configured = bool(os.getenv("DB_USER") and os.getenv("DB_NAME"))
-    connection = None
-    try:
-        connection = connect_to_database()
-    except (pymysql.MySQLError, RuntimeError, ValueError) as error:
-        app.logger.exception("Database health check failed")
-        diagnostic_code, diagnostic = database_diagnostic(error)
-        return jsonify({
-            "status": "error",
-            "database_configured": database_configured,
-            "database_connected": False,
-            "account_table_available": False,
-            "diagnostic_code": diagnostic_code,
-            "message": diagnostic,
-        }), 503
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT user_id FROM `user` LIMIT 0")
-        return jsonify({
-            "status": "ok",
-            "database_configured": database_configured,
-            "database_connected": True,
-            "account_table_available": True,
-        })
-    except pymysql.MySQLError as error:
-        app.logger.exception("Database health check could not read the account table")
-        diagnostic_code, diagnostic = database_diagnostic(error)
-        return jsonify({
-            "status": "error",
-            "database_configured": database_configured,
-            "database_connected": True,
-            "account_table_available": False,
-            "diagnostic_code": diagnostic_code,
-            "message": diagnostic,
-        }), 503
-    finally:
-        if connection:
-            connection.close()
+    return jsonify({"status": "ok", "database_configured": bool(
+        os.getenv("DB_USER") and os.getenv("DB_NAME")
+    )})
 
 
 @app.get("/")
@@ -339,14 +252,13 @@ def account_exists():
             )
             result = cursor.fetchone()
         return jsonify({"exists": bool(result[0])})
-    except (pymysql.MySQLError, RuntimeError, ValueError) as error:
+    except (pymysql.MySQLError, RuntimeError, ValueError):
         app.logger.exception("Could not check whether an account exists")
-        diagnostic_code, diagnostic = database_diagnostic(error)
-        return jsonify({
-            "error": "Could not check accounts.",
-            "diagnostic_code": diagnostic_code,
-            "diagnostic": diagnostic,
-        }), 503
+        return json_error(
+            "Could not check accounts. Confirm Flask is running, database settings are set, "
+            "and the XAMPP `pos` database is available.",
+            503,
+        )
     finally:
         if connection:
             connection.close()
@@ -364,14 +276,12 @@ def login_user_ids():
             )
             user_ids = [row[0] for row in cursor.fetchall()]
         return jsonify({"user_ids": user_ids})
-    except (pymysql.MySQLError, RuntimeError, ValueError) as error:
+    except (pymysql.MySQLError, RuntimeError, ValueError):
         app.logger.exception("Could not retrieve account IDs for login")
-        diagnostic_code, diagnostic = database_diagnostic(error)
-        return jsonify({
-            "error": "Could not load account IDs.",
-            "diagnostic_code": diagnostic_code,
-            "diagnostic": diagnostic,
-        }), 503
+        return json_error(
+            "Could not load account IDs. Confirm the Flask and XAMPP database settings.",
+            503,
+        )
     finally:
         if connection:
             connection.close()
