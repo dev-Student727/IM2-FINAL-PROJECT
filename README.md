@@ -1,10 +1,30 @@
 # MRB-POS
 
-MRB-POS is a browser-based point-of-sale and inventory application. The Flask
-API uses the existing XAMPP MariaDB/MySQL database as the source of truth for
-products, stock, sales, customer debts, payment history, reports, and settings.
+MRB-POS is a browser-based point-of-sale and inventory application. The current
+frontend stores accounts, products, sales, debts, and settings in the browser's
+local storage. Each browser/device has a separate data copy; data is not shared
+or synchronized between devices. The Flask/XAMPP API documented below is an
+optional legacy server mode and is not used by the current frontend.
 
-## Database setup
+## Browser-only mode
+
+Open the frontend over HTTPS (for example, GitHub Pages) or localhost. Create
+an account separately in each browser that will use the POS. Its data stays in
+that browser even if the device is offline, but clearing browser site data can
+delete it. Browser storage is not encrypted and is not appropriate for
+sensitive production records.
+
+In **Settings → Data backup**, use **Export JSON backup** regularly. To move or
+restore POS records on another browser, choose that JSON file under **Restore
+browser backup**, then click **Restore backup**. Restoring replaces that
+browser's products, transactions, debts, and preferences; it does not transfer
+accounts or login. The CSV export is for viewing/reporting, not restoration.
+
+The browser JSON backup is not a MySQL SQL dump and cannot be imported directly
+through phpMyAdmin. XAMPP is separate and is not updated by browser changes;
+continue to back it up independently if you keep using it.
+
+## XAMPP database (optional legacy backend)
 
 1. Start Apache and MySQL in the XAMPP Control Panel.
 2. Open phpMyAdmin at `http://127.0.0.1/phpmyadmin/` and select the existing
@@ -26,7 +46,19 @@ products, stock, sales, customer debts, payment history, reports, and settings.
    Copy the complete error and the SQL statement shown as failing so the
    migration can be diagnosed safely.
 
-## Run the backend
+## Run the frontend locally
+
+From the repository root, serve the frontend:
+
+```powershell
+py -m http.server 5503 --bind 127.0.0.1 --directory src\frontend
+```
+
+Open `http://127.0.0.1:5503/`. No Flask server or XAMPP connection is required
+for browser-only mode. On GitHub Pages, the same browser-only behavior works
+over HTTPS, but each device/browser still has its own separate local data.
+
+## Run the legacy backend
 
 Use Python 3.10 or later. Install the backend packages from the repository root:
 
@@ -54,111 +86,33 @@ The API listens on `http://127.0.0.1:5000`. Check
 `http://127.0.0.1:5000/api/health` for the process status. Database-backed
 requests also require the migration and a reachable XAMPP database.
 
-## Deploy the full stack to Render
-
-The deployed application uses a hosted MySQL-compatible database. Render cannot
-reach XAMPP running on your PC, and the app will not be available while your PC
-is off if XAMPP is the only database.
-
-### Backend web service
-
-Create a Render **Web Service** from this repository:
-
-- **Root Directory:** `src/backend`
-- **Build Command:** `pip install -r requirements.txt`
-- **Start Command:** `gunicorn app:app --bind 0.0.0.0:$PORT`
-
-Set these backend environment variables in Render:
-
-- `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD`: the values
-  supplied by your hosted MySQL provider.
-- `DB_SSL_CA`: optional path to the provider's CA certificate. If configured,
-  PyMySQL verifies the server certificate and hostname.
-- `FLASK_SECRET_KEY`: a long, persistent random secret. Generate one locally
-  with `py -c "import secrets; print(secrets.token_urlsafe(48))"`; do not
-  publish it or change it between deploys.
-- `CORS_ALLOWED_ORIGINS`: the exact frontend origin, with no trailing slash,
-  for example `https://im2-final-project.onrender.com`.
-- `SESSION_COOKIE_SAMESITE`: `None`
-- `SESSION_COOKIE_SECURE`: `true`
-
-Do not use `127.0.0.1` or `localhost` for the hosted database's `DB_HOST`.
-They refer to the Render service itself.
-
-### Frontend static site
-
-Create a Render **Static Site** from the same repository:
-
-- **Root Directory:** `src/frontend`
-- **Build Command:** `echo "No frontend build required"`
-- **Publish Directory:** `.`
-
-The frontend is configured to call
-`https://proj-pos-backend.onrender.com/api` outside localhost. If your backend
-uses a different Render hostname, update the API base in
-`src/frontend/js/app.js`, `src/frontend/js/auth.js`, and
-`src/frontend/js/main-system.js`, then redeploy the frontend.
-
-### Database and verification
-
-Export the XAMPP `pos` database before importing a copy into the hosted MySQL
-service. Test the import and schema against that provider; do not overwrite or
-delete the local XAMPP database. Set the hosted database credentials only in
-the Render backend's environment settings.
-
-After both services deploy, check the backend's `/api/health` and
-`/api/auth/account-exists` endpoints. The first checks that Flask is running;
-the account endpoint also checks database connectivity. Then test signup,
-login, and one database-backed page from the deployed frontend.
-
-## Run the frontend
-
-Open the frontend with VS Code Live Server using port `5500` and visit
-`src/frontend/index.html`. The API allows requests from `localhost:5500` and
-`127.0.0.1:5500`. Keep the Flask terminal and XAMPP MySQL service running while
-using the application.
-
-The welcome page checks for accounts in MySQL. Signup stores passwords as
-Werkzeug hashes and signs the new account in; login verifies the stored hash
-and uses an HTTP-only session cookie. The API requires a signed-in session for
-POS, product, debt, report, and settings requests. Keep the frontend and API on
-the same loopback hostname (`localhost` or `127.0.0.1`) so the session cookie
-can be sent with API requests. “Remember Me” keeps the signed-in session for up
-to 30 days; without it, the session cookie expires when the browser session
-ends. When “Remember login on this device” is checked, the login page can save
-and retrieve the credentials through the browser's password manager. Credentials
-are not stored by the application in localStorage, sessionStorage, or MySQL.
-Leaving it unchecked clears the login fields and does not request credential
-storage. Use the main-system Log out button to clear the server session.
+The Flask API remains available for an alternative server-backed setup, but
+the current browser-only frontend does not call it. If deploying the backend
+separately, it needs a remotely reachable MySQL-compatible database; XAMPP at
+`127.0.0.1` on your PC cannot be reached by a cloud service. Keep database
+credentials and `FLASK_SECRET_KEY` out of Git and frontend code.
 
 ## POS workflows
 
-- Products and stock are loaded from MySQL. Product changes and archive actions
-  are sent to Flask; archived products are hidden from the catalog but remain
-  available to historical transactions.
-- POS checkout locks inventory rows and writes the transaction, line items,
-  stock reduction, and any debt record in one database transaction.
+- Products, stock, sales, debts, and settings are stored in the current
+  browser's local storage. Archived products remain in historical transaction
+  details.
+- POS checkout updates local inventory and records the sale and any debt in the
+  browser.
 - Repeated debts for the same customer identity (contact number when entered,
   otherwise normalized customer name) update the existing balance and retain
   each sale grouped by its transaction date.
 - Partial/full debt payments are recorded in payment history. Fully paid debts
   no longer show the payment action. Debt deletion is a soft archive; sales and
   payment history are retained.
-- Dashboard, sales report, and history filters read from the database.
-- Settings can be saved and all product, transaction, and debt data can be
-  exported as JSON or CSV. Import is not offered.
-
-The POS records operator transactions under a generated `POS-SYSTEM` user row
-when that configured user ID does not already exist. Set `POS_USER_ID` before
-starting Flask to use a different operator ID.
+- Dashboard, sales report, and history filters use the browser's local data.
+- Settings can be saved. POS records can be exported as a restorable JSON
+  backup or a CSV report.
 
 ## Current limitations
 
-The API is intended for local development and does not provide HTTPS,
-multi-factor authentication, account recovery, or production deployment
-hardening. Do not expose the development server or database to the public
-internet.
-
-Products that existed only in browser `localStorage` are not copied to MySQL
-automatically. They remain in that browser's site data, but the revised POS no
-longer reads them; add the products to the MySQL-backed catalog before checkout.
+Browser storage is device- and browser-specific, can be cleared by the user,
+and is not encrypted. It does not provide shared multi-device data, secure
+server-side authentication, or automatic synchronization to XAMPP. Keep
+separate, regular backups and do not use this mode as the sole record store for
+sensitive production transactions.

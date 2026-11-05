@@ -1,6 +1,3 @@
-const API_BASE_URL = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-    ? `http://${window.location.hostname}:5000/api`
-    : 'https://im2-final-project.onrender.com/api';
 const FRONTEND_ENTRY_URL = new URL('../index.html', document.currentScript.src);
 const LOGIN_PAGE_URL = new URL('../pages/login.html', document.currentScript.src);
 let currencySymbol = '₱';
@@ -31,31 +28,7 @@ function makeExportFileName(kind, extension) {
 }
 
 async function apiRequest(path, options = {}) {
-    let response;
-    try {
-        response = await fetch(`${API_BASE_URL}${path}`, {
-            ...options,
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    } catch (error) {
-        if (error instanceof TypeError) {
-            throw new Error(
-                `Flask API is unreachable at ${API_BASE_URL}. Start the backend and check its database settings.`
-            );
-        }
-        throw error;
-    }
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok) {
-        const error = new Error(payload.error || `Request failed (${response.status}).`);
-        error.status = response.status;
-        throw error;
-    }
-    return payload;
+    return window.MRBLocalStore.request(path, options);
 }
 
 window.MRBApi = { request: apiRequest };
@@ -1707,6 +1680,41 @@ document.addEventListener('DOMContentLoaded', async () => {
                 setSettingsMessage('CSV file downloaded.');
             } catch (error) {
                 setSettingsMessage(`Could not export CSV. ${error.message}`, true);
+            }
+        });
+
+        const importFile = document.getElementById('settings-import-file');
+        const importButton = document.getElementById('settings-import');
+        let selectedBackup = null;
+        importFile.addEventListener('change', async () => {
+            selectedBackup = null;
+            importButton.disabled = true;
+            const file = importFile.files[0];
+            if (!file) return;
+            try {
+                selectedBackup = JSON.parse(await file.text());
+                importButton.disabled = false;
+                setSettingsMessage('Backup file loaded. Restoring it will replace this browser’s POS records.');
+            } catch (error) {
+                setSettingsMessage(`Could not read the backup file. ${error.message}`, true);
+            }
+        });
+        importButton.addEventListener('click', async () => {
+            if (!selectedBackup) return;
+            if (!window.confirm(
+                'Restore this backup? It will replace this browser’s products, transactions, debts, and settings. Accounts and login will remain unchanged.'
+            )) return;
+            importButton.disabled = true;
+            setSettingsMessage('');
+            try {
+                await apiRequest('/import', {
+                    method: 'POST',
+                    body: JSON.stringify(selectedBackup)
+                });
+                window.location.reload();
+            } catch (error) {
+                importButton.disabled = false;
+                setSettingsMessage(`Could not restore backup. ${error.message}`, true);
             }
         });
     }

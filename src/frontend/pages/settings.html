@@ -36,15 +36,20 @@
                 </section>
                 <section class="settings-panel">
                     <h2>Data backup</h2>
-                    <p>Download products, sales, and debt records as a JSON backup or CSV file. Import is not available.</p>
+                    <p>POS data is saved in this browser only. Download a JSON backup regularly. Restoring a backup replaces this browser's products, sales, debts, and settings; accounts are not included.</p>
                     <div class="settings-export-actions">
                         <button id="settings-export" type="button"><i class="bx bx-data" aria-hidden="true"></i> Export JSON backup</button>
                         <button id="settings-export-csv" type="button"><i class="bx bx-spreadsheet" aria-hidden="true"></i> Export CSV</button>
                     </div>
+                    <label class="backup-import-label" for="settings-import-file">Restore browser backup (JSON)</label>
+                    <input id="settings-import-file" type="file" accept=".json,application/json">
+                    <button id="settings-import" type="button" disabled>Restore backup</button>
+                    <p>Each device has separate browser data; backups do not automatically sync to XAMPP.</p>
                 </section>
             </main>
         </div>
     </div>
+    <script src="../js/local-store.js"></script>
     <script src="../js/main-system.js"></script>
 </body>
 </html>

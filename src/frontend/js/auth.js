@@ -1,6 +1,3 @@
-const AUTH_API_BASE = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-    ? `http://${window.location.hostname}:5000/api`
-    : 'https://im2-final-project.onrender.com/api';
 const FRONTEND_ROOT_URL = new URL('../', document.currentScript.src);
 const SIGNUP_STEP_URL = new URL('pages/funnel/signup2.html', FRONTEND_ROOT_URL);
 const SIGNUP_PAGE_URL = new URL('pages/signup.html', FRONTEND_ROOT_URL);
@@ -8,29 +5,7 @@ const DASHBOARD_PAGE_URL = new URL('pages/dashboard.html', FRONTEND_ROOT_URL);
 const WELCOME_PAGE_URL = new URL('index.html', FRONTEND_ROOT_URL);
 
 async function authApiRequest(path, options = {}) {
-    let response;
-    try {
-        response = await fetch(`${AUTH_API_BASE}${path}`, {
-            ...options,
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    } catch (error) {
-        if (error instanceof TypeError) {
-            throw new Error(
-                `Flask API is unreachable at ${AUTH_API_BASE}. Start the backend and check the XAMPP connection.`
-            );
-        }
-        throw error;
-    }
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok) {
-        throw new Error(result.error || `Request failed (${response.status}).`);
-    }
-    return result;
+    return window.MRBLocalStore.request(path, options);
 }
 
 // Sign Up authentication function
@@ -268,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function showSaveConfirmation() {
-            showModal('Account saved to the database and login successful. Continue to the POS?');
+            showModal('Account saved in this browser and login successful. Continue to the POS?');
 
             const check = document.createElement('span');
             check.className = 'modal-success-check';
@@ -392,7 +367,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Login uses the Flask API; the API keeps the authenticated session in an HTTP-only cookie.
+    // Login credentials and session are stored locally in this browser.
     const loginForm = document.querySelector('.login-container form');
     const loginModal = document.getElementById('custom-modal');
     const loginModalMessage = document.getElementById('modal-msg-text');

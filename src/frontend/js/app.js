@@ -1,28 +1,9 @@
-const WELCOME_API_BASE = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-    ? `http://${window.location.hostname}:5000/api`
-    : 'https://im2-final-project.onrender.com/api';
 const FRONTEND_ROOT_URL = new URL('../', document.currentScript.src);
 const LOGIN_PAGE_URL = new URL('pages/login.html', FRONTEND_ROOT_URL);
 const SIGNUP_PAGE_URL = new URL('pages/signup.html', FRONTEND_ROOT_URL);
 
-async function checkDatabaseForAccount() {
-    let response;
-    try {
-        response = await fetch(`${WELCOME_API_BASE}/auth/account-exists`, {
-            credentials: 'include'
-        });
-    } catch (error) {
-        if (error instanceof TypeError) {
-            throw new Error(
-                `Cannot reach Flask at ${WELCOME_API_BASE}. Start the backend and verify the XAMPP database settings.`
-            );
-        }
-        throw error;
-    }
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok) {
-        throw new Error(result.error || `Account check failed (${response.status}).`);
-    }
+async function checkLocalAccount() {
+    const result = await window.MRBLocalStore.request('/auth/account-exists');
     return result.exists;
 }
 
@@ -59,11 +40,11 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
             if (loginBtn.disabled) return;
             loginBtn.disabled = true;
-            showCustomModal('Checking the XAMPP database for an account…', []);
+            showCustomModal('Checking for an account saved in this browser…', []);
 
             let hasAccount;
             try {
-                hasAccount = await checkDatabaseForAccount();
+                hasAccount = await checkLocalAccount();
             } catch (error) {
                 showCustomModal(error.message, [
                     {

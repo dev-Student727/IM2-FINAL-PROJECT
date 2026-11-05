@@ -4,7 +4,7 @@
   "description": "This repository contain all the folder and project information about my project that is named (Micro Retail Business Point of Sales (Web-Based - Mobile/Desktop)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test tests/local-store.test.js"
   },
   "repository": {
     "type": "git",
