@@ -1,6 +1,6 @@
 const WELCOME_API_BASE = ['localhost', '127.0.0.1'].includes(window.location.hostname)
     ? `http://${window.location.hostname}:5000/api`
-    : 'https://proj-pos-backend.onrender.com/api';
+    : 'https://im2-final-project.onrender.com/api';
 const FRONTEND_ROOT_URL = new URL('../', document.currentScript.src);
 const LOGIN_PAGE_URL = new URL('pages/login.html', FRONTEND_ROOT_URL);
 const SIGNUP_PAGE_URL = new URL('pages/signup.html', FRONTEND_ROOT_URL);
