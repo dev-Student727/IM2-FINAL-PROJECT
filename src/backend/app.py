@@ -116,6 +116,14 @@ def connect_to_database():
     missing = [key for key in required if not os.getenv(key)]
     if missing:
         raise RuntimeError(f"Missing database settings: {', '.join(missing)}")
+    ssl_options = {}
+    ssl_ca = os.getenv("DB_SSL_CA")
+    if ssl_ca:
+        ssl_options.update(
+            ssl_ca=ssl_ca,
+            ssl_verify_cert=True,
+            ssl_verify_identity=True,
+        )
     return pymysql.connect(
         host=os.getenv("DB_HOST", "127.0.0.1"),
         port=int(os.getenv("DB_PORT", "3306")),
@@ -125,6 +133,7 @@ def connect_to_database():
         charset="utf8mb4",
         connect_timeout=5,
         autocommit=False,
+        **ssl_options,
     )
 
 

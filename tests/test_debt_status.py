@@ -3,7 +3,7 @@ from decimal import Decimal
 import os
 from unittest.mock import patch
 
-from src.backend.app import app, debt_status, load_secret_key
+from src.backend.app import app, connect_to_database, debt_status, load_secret_key
 
 
 class DebtStatusTests(unittest.TestCase):
@@ -37,6 +37,24 @@ class DebtStatusTests(unittest.TestCase):
             )
         self.assertEqual(response.headers["Access-Control-Allow-Origin"], "https://pos.example.com")
         self.assertEqual(response.headers["Access-Control-Allow-Credentials"], "true")
+
+    def test_database_ca_enables_verified_tls(self):
+        database_settings = {
+            "DB_USER": "app-user",
+            "DB_NAME": "pos",
+            "DB_SSL_CA": "/etc/secrets/mysql-ca.pem",
+        }
+        with patch.dict(os.environ, database_settings), patch(
+            "src.backend.app.pymysql.connect"
+        ) as connect:
+            connect_to_database()
+
+        self.assertEqual(
+            connect.call_args.kwargs["ssl_ca"],
+            "/etc/secrets/mysql-ca.pem",
+        )
+        self.assertTrue(connect.call_args.kwargs["ssl_verify_cert"])
+        self.assertTrue(connect.call_args.kwargs["ssl_verify_identity"])
 
 
 if __name__ == "__main__":

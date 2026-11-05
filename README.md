@@ -54,30 +54,62 @@ The API listens on `http://127.0.0.1:5000`. Check
 `http://127.0.0.1:5000/api/health` for the process status. Database-backed
 requests also require the migration and a reachable XAMPP database.
 
-## Deploying the Flask backend to Vercel
+## Deploy the full stack to Render
 
-1. In Vercel Project Settings → General, set **Root Directory** to
-   `src/backend`. This folder contains `app.py` (the Flask instance is named
-   `app`) and `requirements.txt`; Vercel detects the Flask application.
-2. In Project Settings → Environment Variables, configure:
-   - `FLASK_SECRET_KEY`: a persistent random secret. Generate one locally with
-     `py -c "import secrets; print(secrets.token_urlsafe(48))"`. Keep it private
-     and unchanged between deployments.
-   - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`: credentials
-     and host for a hosted MySQL-compatible database.
-   - `CORS_ALLOWED_ORIGINS`: your deployed frontend origin, such as
-     `https://your-frontend.vercel.app` (no path or trailing slash). For more
-     than one origin, separate them with commas.
-3. Use a managed database reachable from Vercel. XAMPP at `127.0.0.1` is on
-   your computer and cannot be reached by a deployed function. Back up the
-   hosted database and apply `src/database/pos_feature_migration.sql` to it.
-4. Redeploy after setting the variables. Open `/` for the API service response
-   or `/api/health` for the health check. These routes confirm the function
-   runs; database-backed APIs also require valid database settings and schema.
+The deployed application uses a hosted MySQL-compatible database. Render cannot
+reach XAMPP running on your PC, and the app will not be available while your PC
+is off if XAMPP is the only database.
 
-Vercel enables secure cross-site session cookies by default. Keep the frontend
-and backend on HTTPS, and do not put database credentials or `FLASK_SECRET_KEY`
-in frontend variables or GitHub.
+### Backend web service
+
+Create a Render **Web Service** from this repository:
+
+- **Root Directory:** `src/backend`
+- **Build Command:** `pip install -r requirements.txt`
+- **Start Command:** `gunicorn app:app --bind 0.0.0.0:$PORT`
+
+Set these backend environment variables in Render:
+
+- `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD`: the values
+  supplied by your hosted MySQL provider.
+- `DB_SSL_CA`: optional path to the provider's CA certificate. If configured,
+  PyMySQL verifies the server certificate and hostname.
+- `FLASK_SECRET_KEY`: a long, persistent random secret. Generate one locally
+  with `py -c "import secrets; print(secrets.token_urlsafe(48))"`; do not
+  publish it or change it between deploys.
+- `CORS_ALLOWED_ORIGINS`: the exact frontend origin, with no trailing slash,
+  for example `https://im2-final-project.onrender.com`.
+- `SESSION_COOKIE_SAMESITE`: `None`
+- `SESSION_COOKIE_SECURE`: `true`
+
+Do not use `127.0.0.1` or `localhost` for the hosted database's `DB_HOST`.
+They refer to the Render service itself.
+
+### Frontend static site
+
+Create a Render **Static Site** from the same repository:
+
+- **Root Directory:** `src/frontend`
+- **Build Command:** `echo "No frontend build required"`
+- **Publish Directory:** `.`
+
+The frontend is configured to call
+`https://proj-pos-backend.onrender.com/api` outside localhost. If your backend
+uses a different Render hostname, update the API base in
+`src/frontend/js/app.js`, `src/frontend/js/auth.js`, and
+`src/frontend/js/main-system.js`, then redeploy the frontend.
+
+### Database and verification
+
+Export the XAMPP `pos` database before importing a copy into the hosted MySQL
+service. Test the import and schema against that provider; do not overwrite or
+delete the local XAMPP database. Set the hosted database credentials only in
+the Render backend's environment settings.
+
+After both services deploy, check the backend's `/api/health` and
+`/api/auth/account-exists` endpoints. The first checks that Flask is running;
+the account endpoint also checks database connectivity. Then test signup,
+login, and one database-backed page from the deployed frontend.
 
 ## Run the frontend
 
