@@ -36,6 +36,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (loginBtn && modalOverlay && modalMsgText && modalBtnContainer) {
+        showCustomModal(
+            'Notice: We are currently making ongoing system improvements. Some features may be temporarily unavailable. Thank you for your patience.',
+            [
+                {
+                    text: 'Continue',
+                    primary: true
+                }
+            ]
+        );
+
         loginBtn.addEventListener('click', async function(event) {
             event.preventDefault();
             if (loginBtn.disabled) return;
