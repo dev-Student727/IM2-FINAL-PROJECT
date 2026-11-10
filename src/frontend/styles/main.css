@@ -150,7 +150,7 @@ h1 {
     font-weight: 800;
     letter-spacing: -0.5px;
     font-style: italic;
-    color: var(--bg-cyan-400);
+    color: var(--bg-green-800);
     margin-bottom: 50px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
     z-index: 10;
