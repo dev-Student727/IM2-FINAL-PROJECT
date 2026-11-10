@@ -154,7 +154,7 @@ body, html {
     width: 100vw;
     height: 100vh;
     /* background Image */
-    /*background-image: url('../assets/bg-image-1.png'); */
+    background-image: url('../assets/bg-image-1.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -167,12 +167,12 @@ body, html {
     z-index: -2;
 }
 
-/*.bg-overlay {
+.bg-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(138, 255, 138, 0.50); /* Semi-transparent black overlay
+    background-color: rgba(138, 255, 138, 0.50); /* Semi-transparent black overlay */
     z-index: -1;
-}*/
+}
