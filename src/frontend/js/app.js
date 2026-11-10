@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (loginBtn && modalOverlay && modalMsgText && modalBtnContainer) {
         showCustomModal(
-            'Notice: We are currently making ongoing system improvements. Some features may be temporarily unavailable. Thank you for your patience.',
+            'Notice: Currently making system improvements. Some features may be temporarily unavailable. Thank you for your patience.',
             [
                 {
                     text: 'Continue',
