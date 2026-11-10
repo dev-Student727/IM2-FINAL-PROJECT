@@ -140,23 +140,29 @@ body, html {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    color: #000000;
+    color: #ffffff;
     text-align: center;
     padding: 20px;
 }
 
 /* ###### Background Image and Overlay Styles for desktop ###### */ 
 
-/*.bg-container {
+.bg-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
+    /* background Image */
+    background-image: url('../assets/bg-image-1.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    
+    /* Add a blur overlay to the background image */
     filter: blur(6px);
+
+    /* Slightly scale up to prevent blur edges from showing white borders */
     transform: scale(1.05);
     z-index: -2;
 }
@@ -167,6 +173,6 @@ body, html {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(138, 255, 138, 0.50);
+    background-color: rgba(0, 0, 163, 0.50); /* Semi-transparent black overlay */
     z-index: -1;
-}*/
+}
