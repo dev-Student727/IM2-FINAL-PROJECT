@@ -16,9 +16,26 @@
     <div class="bg-container"></div>
     <div class="bg-overlay"></div>
 
-    <div class="container">
-        <form action="">
-            <h1>Sign Up</h1>
+    <div class="container signup-shell">
+        <header class="signup-header">
+            <div>
+                <p class="signup-kicker">ACCOUNT SETUP</p>
+                <h1>Sign Up</h1>
+            </div>
+            <a class="welcome-link" href="../index.html">Back to Welcome</a>
+        </header>
+
+        <nav class="phase-tabs" aria-label="Signup phases">
+            <a class="phase-tab is-active" href="signup.html" aria-current="step">
+                <span>1</span> Profile details
+            </a>
+            <a class="phase-tab" href="funnel/signup2.html">
+                <span>2</span> Login details
+            </a>
+        </nav>
+
+        <form class="phase-one-form" action="">
+            <div class="input-grid">
 
             <!-- Input Types -->
             <div class="input-box">
@@ -29,6 +46,7 @@
             </div>
             <div class="input-box">
                 <input type="tel" id="user-phone" placeholder="ex.09091234567" required>
+            </div>
             </div>
 
             <button type="submit" class="btn" id="next-btn">Next</button>

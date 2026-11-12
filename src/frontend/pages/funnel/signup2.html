@@ -16,60 +16,78 @@
     <div class="bg-container"></div>
     <div class="bg-overlay"></div>
 
-    <div class="card">
-        <div class="header">
+    <div class="card signup-shell signup-step-two">
+        <header class="signup-header header">
+            <div>
+                <p class="signup-kicker">ACCOUNT SETUP</p>
             <h1>Create Your Account</h1>
-        </div>
-        
-        <form id="signup-form">
-            <!-- USER ID INPUT -->
-            <div class="form-group">
-                <label for="user-id">User ID / Username:</label>
-                <input type="text" id="user-id" class="form-control" placeholder="e.g. pos_O1234" required>
             </div>
+            <a class="welcome-link" href="../../index.html">Back to Welcome</a>
+        </header>
 
-            <!-- USER ID SECURITY CHECKLIST -->
-            <div class="checklist" id="userid-checklist">
-                <p class="title">User ID /Username Checklist:</p>
-                <div id="req-id-len" class="check-item"><span class="dot"></span>User ID At least 5 characters long</div>
-                <div id="req-id-no-space" class="check-item"><span class="dot"></span>No spaces</div>
-            </div>
+        <nav class="phase-tabs" aria-label="Signup phases">
+            <a class="phase-tab" href="../signup.html"><span>1</span> Profile details</a>
+            <a class="phase-tab is-active" href="signup2.html" aria-current="step"><span>2</span> Login details</a>
+        </nav>
 
-            <!-- Password Input -->
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <div class="input-wrapper">
-                    <input type="password" id="password" class="form-control" required style="padding-right: 40px;">
-                    <button type="button" id="toggle-password" class="toggle-btn">
-                        <i class='bx bx-show' id="eye-icon-pwd"></i>
-                    </button>
+        <form id="signup-form" class="phase-two-form">
+            <div class="input-grid phase-two-grid">
+                <div class="phase-field">
+                    <!-- USER ID INPUT -->
+                    <div class="form-group">
+                        <label for="user-id">User ID / Username:</label>
+                        <input type="text" id="user-id" class="form-control" placeholder="e.g. pos_O1234" required>
+                    </div>
+
+                    <!-- USER ID SECURITY CHECKLIST -->
+                    <div class="checklist" id="userid-checklist">
+                        <p class="title">User ID / Username checklist</p>
+                        <div id="req-id-len" class="check-item"><span class="dot"></span>User ID at least 5 characters long</div>
+                        <div id="req-id-no-space" class="check-item"><span class="dot"></span>No spaces</div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Password Checklist Validation-->
-            <div class="checklist" id="password-checklist">
-                <p class="title">Password Checklist:</p>
-                <div id="req-pwd-len" class="check-item"><span class="dot"></span>At least 8 characters long</div>
-                <div id="req-pwd-upper" class="check-item"><span class="dot"></span>At least one uppercase (A-Z)</div>
-                <div id="req-pwd-num" class="check-item"><span class="dot"></span>At least one number (0 - 9)</div>
-                <div id="req-pwd-special" class="check-item"><span class="dot"></span>At least one special character (e.g., #!&%_-)</div>
-            </div>
+                <div class="phase-field">
+                    <!-- Password Input -->
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="password" class="form-control" required style="padding-right: 40px;">
+                            <button type="button" id="toggle-password" class="toggle-btn">
+                                <i class='bx bx-show' id="eye-icon-pwd"></i>
+                            </button>
+                        </div>
+                    </div>
 
-            <!--Password Confirmation Input-->
-            <div class="form-group">
-                <label for="confirm-password">Confirm Password:</label>
-                <div class="input-wrapper">
-                    <input type="password" id="confirm-password" class="form-control" placeholder="Complete the requirement first..." disabled required style="padding-right: 40px;">
-                    <button type="button" id="toggle-confirm" class="toggle-btn">
-                        <i class='bx bx-show' id="eye-icon-conf"></i>
-                    </button>
+                    <!-- Password Checklist Validation-->
+                    <div class="checklist" id="password-checklist">
+                        <p class="title">Password checklist</p>
+                        <div id="req-pwd-len" class="check-item"><span class="dot"></span>At least 8 characters long</div>
+                        <div id="req-pwd-upper" class="check-item"><span class="dot"></span>At least one uppercase (A-Z)</div>
+                        <div id="req-pwd-num" class="check-item"><span class="dot"></span>At least one number (0 - 9)</div>
+                        <div id="req-pwd-special" class="check-item"><span class="dot"></span>At least one special character (e.g., #!&amp;%_-)</div>
+                    </div>
                 </div>
-                <p id="match-error" class="error-msg"> Password do not match</p>
+
+                <div class="phase-field confirm-field">
+                    <!--Password Confirmation Input-->
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password:</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="confirm-password" class="form-control" placeholder="Complete the requirement first..." disabled required style="padding-right: 40px;">
+                            <button type="button" id="toggle-confirm" class="toggle-btn">
+                                <i class='bx bx-show' id="eye-icon-conf"></i>
+                            </button>
+                        </div>
+                        <p id="match-error" class="error-msg">Password does not match</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Form Button-->
             <div class="form-action">
                 <button type="submit" id="submit-btn" class="submit-btn" disabled>Create Account</button>
+                <button type="button" class="back-btn secondary-back" onclick="window.location.href='../signup.html'">Back to Phase 1</button>
                 <button type="button" class="back-btn" onclick="window.location.href='../../index.html'">Back to Welcome Page</button>
             </div>
         </form>

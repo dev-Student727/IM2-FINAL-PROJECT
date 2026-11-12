@@ -1,5 +1,4 @@
 const FRONTEND_ENTRY_URL = new URL('../index.html', document.currentScript.src);
-const LOGIN_PAGE_URL = new URL('../pages/login.html', document.currentScript.src);
 let currencySymbol = '₱';
 let storeName = 'MRB-POS';
 const PAGE_TITLE = document.title.split('|').pop().trim();
@@ -40,7 +39,7 @@ function requireAuthenticatedSession() {
         authenticatedSessionPromise = apiRequest('/auth/me')
             .then(({ user }) => {
                 if (user) return true;
-                window.location.replace(LOGIN_PAGE_URL.href);
+                window.location.replace(FRONTEND_ENTRY_URL.href);
                 return false;
             })
             .catch(error => {

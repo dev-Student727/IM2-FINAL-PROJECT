@@ -535,3 +535,354 @@
     border: 1px solid rgba(8, 145, 178, 0.3);
     border-radius: 10px;
 }
+
+/* Shared signup layout: one centered glass card over the full neon background. */
+body {
+    display: grid;
+    place-items: center;
+    min-height: 100dvh;
+    padding: 12px;
+    overflow: hidden;
+    text-align: left;
+}
+
+.container,
+.card {
+    position: relative;
+    inset: auto;
+    z-index: 1;
+    width: min(900px, calc(100% - 24px));
+    max-height: calc(100dvh - 24px);
+    padding: clamp(18px, 3vw, 34px);
+    overflow: hidden;
+    border: 1px solid rgba(103, 232, 249, 0.58);
+    border-radius: 22px;
+    background: rgba(2, 10, 32, 0.38);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.32), 0 0 26px rgba(34, 211, 238, 0.16);
+    backdrop-filter: blur(14px);
+}
+
+.signup-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.signup-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.signup-header h1,
+.header h1 {
+    margin: 0;
+    text-align: left;
+    font-size: clamp(24px, 4vw, 38px);
+}
+
+.signup-step-two .signup-header h1 {
+    white-space: nowrap;
+}
+
+.signup-kicker {
+    margin: 0 0 5px;
+    color: var(--bg-cyan-300);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.welcome-link {
+    flex: 0 0 auto;
+    color: var(--bg-cyan-200);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.welcome-link:hover,
+.welcome-link:focus-visible {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.phase-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 5px;
+    border: 1px solid rgba(103, 232, 249, 0.28);
+    border-radius: 14px;
+    background: rgba(2, 6, 23, 0.34);
+}
+
+.phase-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 9px 12px;
+    border-radius: 10px;
+    color: #cbd5e1;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.phase-tab span {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(103, 232, 249, 0.16);
+    color: var(--bg-cyan-200);
+}
+
+.phase-tab.is-active,
+.phase-tab:hover,
+.phase-tab:focus-visible {
+    background: rgba(34, 211, 238, 0.18);
+    color: #ffffff;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.phase-one-form,
+.phase-two-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.phase-one-form .input-box {
+    width: 100%;
+    height: 46px;
+    margin: 0;
+}
+
+.phase-one-form .input-box:last-child {
+    grid-column: 1 / -1;
+}
+
+.phase-one-form .input-box input {
+    padding: 10px 14px;
+}
+
+.container .btn {
+    width: 100%;
+    height: 44px;
+    margin: 0;
+}
+
+.phase-two-grid {
+    align-items: start;
+}
+
+.phase-field {
+    min-width: 0;
+}
+
+.phase-field.confirm-field {
+    grid-column: 1 / -1;
+}
+
+.form-group {
+    margin: 0;
+}
+
+.form-control {
+    height: 44px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+}
+
+.checklist {
+    margin: 8px 0 0;
+    padding: 10px 12px;
+    font-size: 0.78rem;
+}
+
+.checklist p.title {
+    margin: 0 0 6px;
+    font-size: 0.78rem;
+}
+
+.check-item {
+    margin-bottom: 3px;
+}
+
+.error-msg {
+    margin-bottom: 0;
+}
+
+.form-action {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.submit-btn,
+.back-btn {
+    min-width: 0;
+    padding: 11px 12px;
+    margin: 0;
+    font-size: 0.82rem;
+}
+
+.secondary-back {
+    background: rgba(34, 211, 238, 0.16);
+    color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 8px;
+    }
+
+    .container,
+    .card {
+        width: calc(100% - 16px);
+        max-height: calc(100dvh - 16px);
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    .signup-shell {
+        gap: 10px;
+    }
+
+    .signup-header {
+        align-items: center;
+    }
+
+    .signup-step-two .signup-header {
+        flex-wrap: wrap;
+    }
+
+    .signup-step-two .signup-header > div {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .signup-header h1,
+    .header h1 {
+        font-size: clamp(20px, 7vw, 30px);
+    }
+
+    .signup-step-two .signup-header h1 {
+        font-size: clamp(18px, 6vw, 30px);
+    }
+
+    .welcome-link {
+        font-size: 0.7rem;
+    }
+
+    .phase-tabs {
+        gap: 4px;
+        padding: 3px;
+    }
+
+    .phase-tab {
+        gap: 5px;
+        padding: 7px 5px;
+        font-size: 0.7rem;
+    }
+
+    .phase-tab span {
+        width: 18px;
+        height: 18px;
+    }
+
+    .input-grid {
+        gap: 8px;
+    }
+
+    .phase-one-form,
+    .phase-two-form {
+        gap: 8px;
+    }
+
+    .phase-one-form .input-box {
+        height: 40px;
+    }
+
+    .form-group label {
+        margin-bottom: 3px;
+        font-size: 0.62rem;
+    }
+
+    .form-control {
+        height: 38px;
+        padding: 7px 10px;
+        font-size: 0.8rem;
+        border-radius: 9px;
+    }
+
+    .checklist {
+        padding: 7px 8px;
+        font-size: 0.65rem;
+        border-radius: 9px;
+    }
+
+    .checklist p.title {
+        font-size: 0.66rem;
+        margin-bottom: 3px;
+    }
+
+    .dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .form-action {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    .submit-btn,
+    .back-btn {
+        padding: 8px 5px;
+        font-size: 0.65rem;
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 360px) {
+    .input-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .phase-field.confirm-field,
+    .phase-one-form .input-box:last-child {
+        grid-column: auto;
+    }
+
+    .form-action {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 360px) {
+    /* Keep phase 2 horizontal on narrow phones while keeping its checklists below their inputs. */
+    .signup-step-two .phase-two-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .signup-step-two .phase-field.confirm-field {
+        grid-column: 1 / -1;
+    }
+
+    .signup-step-two .form-action {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}

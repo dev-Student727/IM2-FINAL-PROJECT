@@ -1,6 +1,6 @@
 const FRONTEND_ROOT_URL = new URL('../', document.currentScript.src);
-const LOGIN_PAGE_URL = new URL('pages/login.html', FRONTEND_ROOT_URL);
 const SIGNUP_PAGE_URL = new URL('pages/signup.html', FRONTEND_ROOT_URL);
+const APP_WELCOME_PAGE_URL = new URL('index.html', FRONTEND_ROOT_URL);
 
 async function checkLocalAccount() {
     const result = await window.MRBLocalStore.request('/auth/account-exists');
@@ -9,7 +9,9 @@ async function checkLocalAccount() {
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    const loginBtn = document.getElementById('login-btn');
+    const createAccountBtn = document.getElementById('create-account-btn');
+    const loginContainer = document.querySelector('.login-container');
+    const userIdInput = document.getElementById('user-id');
     const modalOverlay = document.getElementById('custom-modal');
     const modalMsgText = document.getElementById('modal-msg-text');
     const modalBtnContainer = document.getElementById('modal-btn-container');
@@ -35,11 +37,11 @@ document.addEventListener('DOMContentLoaded', function() {
         modalOverlay.classList.add('active');
     }
 
-    if (loginBtn && modalOverlay && modalMsgText && modalBtnContainer) {
-        loginBtn.addEventListener('click', async function(event) {
+    if (createAccountBtn && modalOverlay && modalMsgText && modalBtnContainer) {
+        createAccountBtn.addEventListener('click', async function(event) {
             event.preventDefault();
-            if (loginBtn.disabled) return;
-            loginBtn.disabled = true;
+            if (createAccountBtn.disabled) return;
+            createAccountBtn.disabled = true;
             showCustomModal('Checking for an account saved in this browser…', []);
 
             let hasAccount;
@@ -50,17 +52,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     {
                         text: 'Retry',
                         primary: true,
-                        callback: () => loginBtn.click()
+                        callback: () => createAccountBtn.click()
                     },
                     {
                         text: 'Close',
                         primary: false
                     }
                 ]);
-                loginBtn.disabled = false;
+                createAccountBtn.disabled = false;
                 return;
             }
-            loginBtn.disabled = false;
+            createAccountBtn.disabled = false;
 
             if (hasAccount) {
                 showCustomModal('You already have an account.', [
@@ -68,7 +70,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         text: 'OK',
                         primary: true,
                         callback: function() {
-                            window.location.href = LOGIN_PAGE_URL.href;
+                            loginContainer.classList.remove('is-highlighted');
+                            void loginContainer.offsetWidth;
+                            loginContainer.classList.add('is-highlighted');
+                            userIdInput?.focus();
+                            loginContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
                     }
                 ]);
@@ -80,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     text: 'OK',
                     primary: true,
                     callback: function() {
-                        showCustomModal('Do you want to signup or create an account?', [
+                        showCustomModal('Do you want to create an account?', [
                             {
                                 text: 'Yes',
                                 primary: true,
@@ -97,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             text: 'Yes',
                                             primary: true,
                                             callback: function() {
-                                                window.location.href = FRONTEND_ROOT_URL.href;
+                                                window.location.href = APP_WELCOME_PAGE_URL.href;
                                             }
                                         },
                                         {

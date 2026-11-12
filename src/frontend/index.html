@@ -3,26 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome page</title>
+    <title>Micro Retail | Welcome</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/font.css">
     <link rel="stylesheet" href="styles/modal.css">
     <link rel="stylesheet" href="styles/background.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
     <!-- Pos Welcome Page Content Goes Here - Desktop Version-->
     <div class="bg-container"></div>
     <div class="bg-overlay"></div>
 
-    <span class="version-badge" aria-label="Beta version">Final Beta testing Information - temporary store to localstorage</span>
+    <span class="version-badge" aria-label="Beta version">v1.0 - temporary store to localstorage</span>
 
-    <main class="welcome-content">
-        <h2>WELCOME TO MICRO RETAIL</h2>
-        <h1>POINT OF SALES</h1>
-        <p>
-            Do you have an account? Please login or register to continue.
-        </p>
-        <button class="btn" id="login-btn">Login</button>
+    <main class="welcome-layout">
+        <section class="welcome-content" aria-labelledby="welcome-title">
+            <p class="welcome-eyebrow">MICRO RETAIL BUSINESS</p>
+            <h2 id="welcome-title">WELCOME TO</h2>
+            <h1>POINT OF SALES</h1>
+            <p class="welcome-description">
+                Manage products, sales, and customer records from one simple workspace.
+            </p>
+            <button type="button" class="btn welcome-signup-btn" id="create-account-btn">Create an account</button>
+        </section>
+
+        <section class="login-container" aria-labelledby="login-title">
+            <form action="" autocomplete="off">
+                <p class="login-eyebrow">ACCOUNT ACCESS</p>
+                <h1 id="login-title">LOGIN POS</h1>
+
+                <div class="input-group">
+                    <input type="text" id="user-id" name="user_id" placeholder="User ID" list="account-user-ids" autocomplete="off" required>
+                    <datalist id="account-user-ids"></datalist>
+                    <i class="bx bxs-user" aria-hidden="true"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" placeholder="Password" autocomplete="off" required>
+                    <i class="bx bxs-lock-alt" aria-hidden="true"></i>
+                </div>
+
+                <div class="remember-forgot">
+                    <label>
+                        <input type="checkbox" id="remember-me"> Remember me
+                    </label>
+                    <a href="#" id="forgot-password">Forgot Password?</a>
+                </div>
+                <p class="remember-hint" id="login-status" aria-live="polite"></p>
+                <p class="remember-hint" id="remember-hint" aria-live="polite"></p>
+
+                <button type="submit" class="btn" id="login-submit">Login</button>
+            </form>
+        </section>
     </main>
 
     <footer class="site-footer">
@@ -42,5 +75,6 @@
 
     <script src="js/local-store.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>
