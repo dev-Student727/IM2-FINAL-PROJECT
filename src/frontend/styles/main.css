@@ -88,6 +88,28 @@
     }
 }
 
+/* Intermediate landscape tablets keep the desktop composition with safe edge space. */
+@media (min-width: 901px) and (max-width: 1200px) and (orientation: landscape) {
+    .welcome-layout {
+        width: calc(100% - 48px);
+        gap: clamp(36px, 6vw, 72px);
+        min-height: calc(100dvh - 32px);
+        max-height: calc(100dvh - 32px);
+        padding-top: 24px;
+    }
+
+    .welcome-content h1 {
+        font-size: clamp(42px, 5.2vw, 64px);
+    }
+
+    .version-badge {
+        top: 12px;
+        right: 16px;
+        max-width: 32vw;
+        font-size: clamp(9px, 1.2vw, 11px);
+    }
+}
+
 @media (max-width: 480px) {
     .welcome-layout {
         max-height: calc(100dvh - 32px);
@@ -557,5 +579,114 @@ body {
         padding: 11px 18px;
         font-size: clamp(12px, 3.8vw, 15px);
         border-radius: 12px;
+    }
+}
+
+/* Portrait tablets: use the available width instead of the phone-sized column. */
+@media (min-width: 601px) and (max-width: 900px) and (orientation: portrait) {
+    .welcome-layout {
+        width: min(calc(100% - 80px), 700px);
+        gap: clamp(32px, 6vh, 64px);
+        padding-top: clamp(36px, 6vh, 72px);
+    }
+
+    .welcome-eyebrow {
+        font-size: clamp(14px, 2.2vw, 18px);
+    }
+
+    .welcome-content h2 {
+        font-size: clamp(30px, 4.5vw, 44px);
+    }
+
+    .welcome-content h1 {
+        font-size: clamp(40px, 6.5vw, 58px);
+    }
+
+    .welcome-description {
+        font-size: clamp(15px, 2.1vw, 18px);
+    }
+
+    .welcome-content .welcome-signup-btn {
+        padding: 13px 24px;
+        font-size: clamp(14px, 2vw, 17px);
+    }
+
+    .version-badge {
+        top: 16px;
+        right: 50%;
+        max-width: calc(100% - 32px);
+        transform: translateX(50%);
+        font-size: clamp(9px, 1.4vw, 12px);
+        text-align: center;
+    }
+}
+
+/* Landscape phones and compact tablets: return to a wider two-column composition. */
+@media (max-width: 900px) and (orientation: landscape) {
+    .welcome-layout {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        grid-template-rows: minmax(0, 1fr);
+        align-content: center;
+        align-items: center;
+        gap: clamp(16px, 4vw, 48px);
+        width: calc(100% - clamp(24px, 8vw, 96px));
+        max-width: 1100px;
+        height: calc(100dvh - 24px);
+        max-height: calc(100dvh - 24px);
+        min-height: 0;
+        padding: clamp(12px, 4vh, 32px) 0 0;
+        overflow: hidden;
+    }
+
+    .welcome-content {
+        min-width: 0;
+        align-items: flex-start;
+    }
+
+    .welcome-eyebrow {
+        font-size: clamp(10px, 2vw, 14px);
+        letter-spacing: 0.1em;
+    }
+
+    .welcome-content h2 {
+        font-size: clamp(20px, 4vw, 34px);
+    }
+
+    .welcome-content h1 {
+        max-width: 100%;
+        font-size: clamp(27px, 6vw, 58px);
+        white-space: nowrap;
+    }
+
+    .welcome-description {
+        max-width: 100%;
+        font-size: clamp(10px, 2vw, 15px);
+    }
+
+    .welcome-content .welcome-signup-btn {
+        padding: 9px 18px;
+        font-size: clamp(11px, 2vw, 15px);
+    }
+
+    .version-badge {
+        top: 8px;
+        right: 12px;
+        max-width: 42vw;
+        font-size: clamp(8px, 1.4vw, 11px);
+        white-space: normal;
+        text-align: right;
+    }
+}
+
+/* Prevent zoom-induced horizontal growth in every layout mode. */
+@media (max-width: 900px) {
+    .welcome-content,
+    .login-container,
+    .login-container form,
+    .input-group,
+    .input-group input,
+    .welcome-description {
+        min-width: 0;
+        max-width: 100%;
     }
 }
